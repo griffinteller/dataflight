@@ -1,0 +1,11 @@
+//
+// Created by griff on 6/28/2021.
+//
+
+#ifndef DATAVISUALIZATION_MACROS_H
+#define DATAVISUALIZATION_MACROS_H
+
+#define RAW_STR_START R"(
+#define RAW_STR_END )"
+
+#endif //DATAVISUALIZATION_MACROS_H

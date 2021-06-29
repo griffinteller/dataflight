@@ -10,7 +10,8 @@ void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-Window::Window(int width, int height)
+Window::Window(int width, int height, const vec4 &clearColor)
+: clearColor(clearColor)
 {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);  // compat versions
@@ -45,20 +46,15 @@ const GLFWwindow *Window::getHandle() const
     return handle;
 }
 
-void Window::addLoopCallback(func callback)
-{
-    loopCallbacks.push_back(callback);
-}
-
 void Window::startLoop()
 {
     while (!glfwWindowShouldClose(handle))
     {
-        glClearColor(1.0, 1.0, 1.0, 1.0);
+        glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        for (void (*callback) () : loopCallbacks)
-            callback();
+        for (IDrawable *drawable : drawables)
+            drawable->draw();
 
         glfwSwapBuffers(handle);
         glfwPollEvents();
@@ -73,4 +69,9 @@ void Window::destroy()
 Window::~Window()
 {
     destroy();
+}
+
+void Window::addDrawable(IDrawable *drawable)
+{
+    drawables.push_back(drawable);
 }

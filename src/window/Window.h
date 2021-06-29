@@ -9,22 +9,23 @@
 #include <vector>
 #include <typedefs.h>
 #include <stddeps.h>
+#include <render/IDrawable.h>
 
 class Window
 {
 private:
     GLFWwindow *handle;
-    std::vector<func> loopCallbacks;
+    vec4 clearColor;
+    std::vector<IDrawable*> drawables;
 
     static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
 
 public:
 
     // Constructs window resources and makes it current opengl context (ie window will show up)
-    Window(int width, int height);
+    Window(int width, int height, const vec4 &clearColor = vec4(1.0, 1.0, 1.0, 1.0));
 
-    // adds callback to be called during the render loop. Callbacks called in order they are added.
-    void addLoopCallback(func callback);
+    void addDrawable(IDrawable *drawable);
 
     // starts render loop
     void startLoop();
