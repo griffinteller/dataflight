@@ -23,12 +23,17 @@ private:
     std::vector<IFrameCallback*> frameCallbacks;
     double lastFrameTime;
     double deltaTime;
+    vec2 lastFrameCursorPos;
+    vec2 deltaCursorPos;
 
-    void cursorPosCallback(GLFWwindow *window, double xpos, double ypos);
+    static Window *activeWindow;
+
     void frameCallback();
     void updateDeltaTime();
+    void updateDeltaCursorPos();
 
     static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
+    static void cursorPosCallback(GLFWwindow *window, double xpos, double ypos);
 
 public:
 
@@ -46,6 +51,7 @@ public:
     void destroy();
 
     double getDeltaTime() const;
+    const vec2 &getDeltaCursorPos() const;
     GLFWwindow *getHandle() const;
 
     ~Window();

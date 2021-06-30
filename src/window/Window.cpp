@@ -6,6 +6,8 @@
 #include <functional>
 #include "Window.h"
 
+Window *Window::activeWindow = nullptr;
+
 void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -14,6 +16,8 @@ void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
 Window::Window(int width, int height, const vec4 &clearColor)
 : clearColor(clearColor), drawables(0), cursorPosCallbacks(0), frameCallbacks(0)
 {
+    activeWindow = this;
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);  // compat versions
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -39,6 +43,7 @@ Window::Window(int width, int height, const vec4 &clearColor)
     glViewport(0, 0, width, height);
 
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+    glfwSetCursorPosCallback(window, cursorPosCallback);
 
     handle = window;
 }
@@ -53,11 +58,12 @@ void Window::startLoop()
     while (!glfwWindowShouldClose(handle))
     {
         updateDeltaTime();
+        updateDeltaCursorPos();
+
+        frameCallback();
 
         glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        frameCallback();
 
         for (IDrawable *drawable : drawables)
             drawable->OnDraw();
@@ -100,7 +106,7 @@ void Window::frameCallback()
 
 void Window::cursorPosCallback(GLFWwindow *window, double xpos, double ypos)
 {
-    for(ICursorPosCallback *obj : cursorPosCallbacks)
+    for(ICursorPosCallback *obj : activeWindow->cursorPosCallbacks)
         obj->OnCursorPos(window, xpos, ypos);
 }
 
@@ -114,4 +120,18 @@ void Window::updateDeltaTime()
 double Window::getDeltaTime() const
 {
     return deltaTime;
+}
+
+void Window::updateDeltaCursorPos()
+{
+    double nowX, nowY;
+    glfwGetCursorPos(handle, &nowX, &nowY);
+    vec2 nowCursorPos (nowX, nowY);
+    deltaCursorPos = nowCursorPos - lastFrameCursorPos;
+    lastFrameCursorPos = nowCursorPos;
+}
+
+const vec2 &Window::getDeltaCursorPos() const
+{
+    return deltaCursorPos;
 }

@@ -189,6 +189,28 @@ void DataCamera::OnFrame()
         vec3 toAdd = (float) (strafeSpeed * window->getDeltaTime()) * right;
         transform.position += toAdd;
     }
+
+    if (glfwGetKey(window->getHandle(), GLFW_KEY_LEFT_SHIFT))
+    {
+        vec3 up = transform.getUp();
+        vec3 toAdd = (float) (-strafeSpeed * window->getDeltaTime()) * up;
+        transform.position += toAdd;
+    }
+
+    if (glfwGetKey(window->getHandle(), GLFW_KEY_SPACE))
+    {
+        vec3 up = transform.getUp();
+        vec3 toAdd = (float) (strafeSpeed * window->getDeltaTime()) * up;
+        transform.position += toAdd;
+    }
+
+    if (glfwGetMouseButton(window->getHandle(), 0))
+    {
+        vec2 deltaDegrees = window->getDeltaCursorPos() * -rotateSpeed;
+        quat yaw = glm::angleAxis(glm::radians(deltaDegrees.x), vec3(0, 1, 0));
+        quat pitch = glm::angleAxis(glm::radians(deltaDegrees.y), transform.getRight());
+        transform.rotation = yaw * pitch * transform.rotation;
+    }
 }
 
 const Transform &DataCamera::getTransform() const
