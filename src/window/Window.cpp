@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <functional>
 #include "Window.h"
 
 void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
@@ -11,7 +12,7 @@ void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
 }
 
 Window::Window(int width, int height, const vec4 &clearColor)
-: clearColor(clearColor)
+: clearColor(clearColor), drawables(0), cursorPosCallbacks(0), frameCallbacks(0)
 {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);  // compat versions
@@ -36,12 +37,13 @@ Window::Window(int width, int height, const vec4 &clearColor)
     }
 
     glViewport(0, 0, width, height);
+
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
     handle = window;
 }
 
-const GLFWwindow *Window::getHandle() const
+GLFWwindow *Window::getHandle() const
 {
     return handle;
 }
@@ -50,11 +52,15 @@ void Window::startLoop()
 {
     while (!glfwWindowShouldClose(handle))
     {
+        updateDeltaTime();
+
         glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        frameCallback();
+
         for (IDrawable *drawable : drawables)
-            drawable->draw();
+            drawable->OnDraw();
 
         glfwSwapBuffers(handle);
         glfwPollEvents();
@@ -74,4 +80,38 @@ Window::~Window()
 void Window::addDrawable(IDrawable *drawable)
 {
     drawables.push_back(drawable);
+}
+
+void Window::addCursorPosCallback(ICursorPosCallback *callbackObj)
+{
+    cursorPosCallbacks.push_back(callbackObj);
+}
+
+void Window::addFrameCallback(IFrameCallback *callbackObj)
+{
+    frameCallbacks.push_back(callbackObj);
+}
+
+void Window::frameCallback()
+{
+    for (IFrameCallback *obj : frameCallbacks)
+        obj->OnFrame();
+}
+
+void Window::cursorPosCallback(GLFWwindow *window, double xpos, double ypos)
+{
+    for(ICursorPosCallback *obj : cursorPosCallbacks)
+        obj->OnCursorPos(window, xpos, ypos);
+}
+
+void Window::updateDeltaTime()
+{
+    double nowTime = glfwGetTime();
+    deltaTime = nowTime - lastFrameTime;
+    lastFrameTime = nowTime;
+}
+
+double Window::getDeltaTime() const
+{
+    return deltaTime;
 }

@@ -10,6 +10,7 @@ uniform mat4 view2Clip;
 void main()
 {
     gl_Position = view2Clip * world2View * vec4(pos, 1.0);
+    gl_PointSize = 50.0f / gl_Position.w;
 }
 
 )"

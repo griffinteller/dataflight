@@ -9,7 +9,7 @@
 class IDrawable
 {
 public:
-    virtual void draw() const = 0;
+    virtual void OnDraw() const = 0;
 };
 
 

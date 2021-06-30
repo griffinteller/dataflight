@@ -9,7 +9,9 @@
 #include <vector>
 #include <typedefs.h>
 #include <stddeps.h>
-#include <render/IDrawable.h>
+#include <window/IDrawable.h>
+#include <window/ICursorPosCallback.h>
+#include <window/IFrameCallback.h>
 
 class Window
 {
@@ -17,6 +19,14 @@ private:
     GLFWwindow *handle;
     vec4 clearColor;
     std::vector<IDrawable*> drawables;
+    std::vector<ICursorPosCallback*> cursorPosCallbacks;
+    std::vector<IFrameCallback*> frameCallbacks;
+    double lastFrameTime;
+    double deltaTime;
+
+    void cursorPosCallback(GLFWwindow *window, double xpos, double ypos);
+    void frameCallback();
+    void updateDeltaTime();
 
     static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
 
@@ -26,6 +36,8 @@ public:
     Window(int width, int height, const vec4 &clearColor = vec4(1.0, 1.0, 1.0, 1.0));
 
     void addDrawable(IDrawable *drawable);
+    void addCursorPosCallback(ICursorPosCallback *callbackObj);
+    void addFrameCallback(IFrameCallback *callbackObj);  // called every frame after clearing but before drawing
 
     // starts render loop
     void startLoop();
@@ -33,7 +45,8 @@ public:
     // closes window
     void destroy();
 
-    const GLFWwindow *getHandle() const;
+    double getDeltaTime() const;
+    GLFWwindow *getHandle() const;
 
     ~Window();
 };

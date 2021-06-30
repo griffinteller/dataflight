@@ -3,23 +3,13 @@
 //
 
 #include <glad/glad.h>
-
 #include <utility>
+#include <iostream>
 #include "DataCamera.h"
 
-const vec3 &DataCamera::getPosition() const
+void DataCamera::OnDraw() const
 {
-    return position;
-}
-
-void DataCamera::setPosition(const vec3 &pos)
-{
-    position = pos;
-}
-
-void DataCamera::draw() const
-{
-    glPointSize(pointSize);
+    glEnable(GL_PROGRAM_POINT_SIZE);
 
     if (smoothed)
     {
@@ -50,25 +40,13 @@ void DataCamera::draw() const
     uint VAO = data.getVAO();
 
     glBindVertexArray(VAO);
-    glDrawArrays(GL_POINTS, 0, data.getSize());
+    glDrawArrays(GL_POINTS, 0, data.getSize() - 3);
     glBindVertexArray(0);
-}
-
-const quat &DataCamera::getRotation() const
-{
-    return rotation;
-}
-
-void DataCamera::setRotation(const quat &rotation)
-{
-    DataCamera::rotation = rotation;
 }
 
 mat4 DataCamera::world2View() const
 {
-    mat4 matrix (1.0f);
-    matrix = glm::translate(matrix, -position);
-    return matrix;
+    return glm::inverse(transform.local2World());
 }
 
 mat4 DataCamera::view2Clip() const
@@ -94,13 +72,12 @@ const char *DataCamera::getFragSource()
     return source;
 }
 
-DataCamera::DataCamera(DataRepresentation data, const vec3 &position, const quat &rotation, float pointSize, float fovy,
+DataCamera::DataCamera(Window *window, DataRepresentation data, const Transform &transform, float pointSize, float fovy,
                        float aspectRatio, float nearFrustum, float farFrustum, bool smoothed)
-                       : data(std::move(data)), position(position),
-                       rotation(rotation), fovy(fovy),
-                       aspectRatio(aspectRatio), nearFrustum(nearFrustum),
-                       farFrustum(farFrustum), pointSize(pointSize),
-                       smoothed(smoothed), shader(getVertSource(), getFragSource())
+                       : window(window), data(std::move(data)), fovy(fovy), transform (transform),
+                         aspectRatio(aspectRatio), nearFrustum(nearFrustum),
+                         farFrustum(farFrustum), pointSize(pointSize),
+                         smoothed(smoothed), shader(getVertSource(), getFragSource())
 {}
 
 const DataRepresentation &DataCamera::getData() const
@@ -181,4 +158,45 @@ const Shader &DataCamera::getShader() const
 void DataCamera::setShader(const Shader &shader)
 {
     DataCamera::shader = shader;
+}
+
+void DataCamera::OnFrame()
+{
+    if (glfwGetKey(window->getHandle(), GLFW_KEY_W))
+    {
+        vec3 back = transform.getBack();
+        vec3 toAdd = (float) (-strafeSpeed * window->getDeltaTime()) * back;
+        transform.position += toAdd;
+    }
+
+    if (glfwGetKey(window->getHandle(), GLFW_KEY_S))
+    {
+        vec3 back = transform.getBack();
+        vec3 toAdd = (float) (strafeSpeed * window->getDeltaTime()) * back;
+        transform.position += toAdd;
+    }
+
+    if (glfwGetKey(window->getHandle(), GLFW_KEY_A))
+    {
+        vec3 right = transform.getRight();
+        vec3 toAdd = (float) (-strafeSpeed * window->getDeltaTime()) * right;
+        transform.position += toAdd;
+    }
+
+    if (glfwGetKey(window->getHandle(), GLFW_KEY_D))
+    {
+        vec3 right = transform.getRight();
+        vec3 toAdd = (float) (strafeSpeed * window->getDeltaTime()) * right;
+        transform.position += toAdd;
+    }
+}
+
+const Transform &DataCamera::getTransform() const
+{
+    return transform;
+}
+
+void DataCamera::setTransform(const Transform &transform)
+{
+    DataCamera::transform = transform;
 }

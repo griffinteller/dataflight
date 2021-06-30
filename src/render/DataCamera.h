@@ -9,15 +9,16 @@
 #include <typedefs.h>
 #include <data/DataRepresentation.h>
 #include <window/Window.h>
+#include <geometry/Transform.h>
 #include "Shader.h"
-#include "IDrawable.h"
+#include "window/IDrawable.h"
 
-class DataCamera : public IDrawable
+class DataCamera : public IDrawable, public IFrameCallback, public ICursorPosCallback
 {
 private:
+    Window *window;
     DataRepresentation data;
-    vec3 position;
-    quat rotation;
+    Transform transform;
     float fovy;
     float aspectRatio;
     float nearFrustum;
@@ -26,6 +27,8 @@ private:
     bool smoothed;
     Shader shader;
 
+    constexpr static float strafeSpeed = 5.0f;
+
     mat4 world2View() const;
     mat4 view2Clip() const;
 
@@ -33,17 +36,16 @@ private:
     static const char* getFragSource();
 
 public:
-    explicit DataCamera(DataRepresentation data, const vec3 &position = vec3(0.0, 0.0, 0.0),
-                        const quat &rotation = quat(1.0, 0.0, 0.0, 0.0), float pointSize = 1, float fovy = 45,
-                        float aspectRatio = 1, float nearFrustum = 0.1, float farFrustum = 100, bool smoothed = false);
+    explicit DataCamera(Window *window, DataRepresentation data, const Transform &transform = Transform(),
+                        float pointSize = 1, float fovy = 45, float aspectRatio = 1, float nearFrustum = 0.1,
+                        float farFrustum = 100, bool smoothed = false);
 
-    void draw() const override;
+    void OnDraw() const override;
+    void OnFrame() override;
 
-    void setPosition(const vec3 &pos);
-    const vec3 &getPosition() const;
+    const Transform &getTransform() const;
 
-    void setRotation(const quat &rotation);
-    const quat &getRotation() const;
+    void setTransform(const Transform &transform);
 
     const DataRepresentation &getData() const;
     void setData(const DataRepresentation &data);
