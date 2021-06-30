@@ -10,20 +10,7 @@
 void DataCamera::OnDraw() const
 {
     glEnable(GL_PROGRAM_POINT_SIZE);
-
-    if (smoothed)
-    {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        glEnable(GL_POINT_SMOOTH);
-        glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-    }
-    else
-    {
-        glDisable(GL_POINT_SMOOTH);
-        glDisable(GL_BLEND);
-    }
+    glEnable(GL_DEPTH_TEST);
 
     shader.use();
     uint id = shader.getID();
@@ -162,6 +149,8 @@ void DataCamera::setShader(const Shader &shader)
 
 void DataCamera::OnFrame()
 {
+    aspectRatio = window->getAspect();
+
     if (glfwGetKey(window->getHandle(), GLFW_KEY_W))
     {
         vec3 back = transform.getBack();
@@ -204,9 +193,10 @@ void DataCamera::OnFrame()
         transform.position += toAdd;
     }
 
-    if (glfwGetMouseButton(window->getHandle(), 0))
+    if (glfwGetMouseButton(window->getHandle(), 1))
     {
-        vec2 deltaDegrees = window->getDeltaCursorPos() * -rotateSpeed;
+        float height = window->getWidthAndHeight().y;
+        vec2 deltaDegrees = window->getDeltaCursorPos() * -rotateSpeed / height;
         quat yaw = glm::angleAxis(glm::radians(deltaDegrees.x), vec3(0, 1, 0));
         quat pitch = glm::angleAxis(glm::radians(deltaDegrees.y), transform.getRight());
         transform.rotation = yaw * pitch * transform.rotation;

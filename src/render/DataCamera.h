@@ -28,7 +28,7 @@ private:
     Shader shader;
 
     constexpr static float strafeSpeed = 5.0f;  // units per second
-    constexpr static float rotateSpeed = 0.3f;  // degrees per pixel
+    constexpr static float rotateSpeed = 100.0f;  // degrees per pixel
 
     mat4 world2View() const;
     mat4 view2Clip() const;

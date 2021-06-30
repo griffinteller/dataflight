@@ -11,11 +11,15 @@ Window *Window::activeWindow = nullptr;
 void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+    activeWindow->width = width;
+    activeWindow->height = height;
 }
 
 Window::Window(int width, int height, const vec4 &clearColor)
 : clearColor(clearColor), drawables(0), cursorPosCallbacks(0), frameCallbacks(0)
 {
+    this->width = width;
+    this->height = height;
     activeWindow = this;
 
     glfwInit();
@@ -134,4 +138,14 @@ void Window::updateDeltaCursorPos()
 const vec2 &Window::getDeltaCursorPos() const
 {
     return deltaCursorPos;
+}
+
+vec2 Window::getWidthAndHeight() const
+{
+    return vec2(width, height);
+}
+
+float Window::getAspect() const
+{
+    return (float) width / (float) height;
 }

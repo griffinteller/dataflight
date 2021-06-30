@@ -10,6 +10,7 @@
 namespace DataGen
 {
     DataRepresentation cube(float width, int pointsPerSide); // points per side must be >= 2
+    DataRepresentation gaussian(float stddev, int points, int seed);
 }
 
 #endif //DATAVISUALIZATION_DATAGEN_H

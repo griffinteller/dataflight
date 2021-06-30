@@ -25,6 +25,8 @@ private:
     double deltaTime;
     vec2 lastFrameCursorPos;
     vec2 deltaCursorPos;
+    int width;
+    int height;
 
     static Window *activeWindow;
 
@@ -53,6 +55,8 @@ public:
     double getDeltaTime() const;
     const vec2 &getDeltaCursorPos() const;
     GLFWwindow *getHandle() const;
+    vec2 getWidthAndHeight() const;
+    float getAspect() const;
 
     ~Window();
 };
