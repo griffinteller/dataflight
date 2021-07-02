@@ -4,6 +4,7 @@
 
 #include "UiContext.h"
 #include <stdimgui.h>
+#include <iostream>
 
 UiContext::UiContext(GLFWwindow *window, const char *glsl_version)
 {
@@ -11,6 +12,7 @@ UiContext::UiContext(GLFWwindow *window, const char *glsl_version)
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     ImGui::StyleColorsDark();
 
@@ -24,9 +26,7 @@ void UiContext::render()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::Begin("A very useful window");
-    ImGui::Text("Hello, ImGui!");
-    ImGui::End();
+    // TODO: ui logic goes here
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
