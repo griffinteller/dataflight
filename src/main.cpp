@@ -14,7 +14,7 @@ int main()
 
     DataCamera camera (&window, data, Transform(vec3(0, 0, 5)), 1);
 
-    window.addDrawable(&camera);
+    window.addMainContextDrawable(&camera);
     window.addFrameCallback(&camera);
 
     window.startLoop();

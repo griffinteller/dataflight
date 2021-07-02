@@ -16,7 +16,7 @@ void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
 }
 
 Window::Window(int width, int height, const vec4 &clearColor)
-: clearColor(clearColor), drawables(0), frameCallbacks(0)
+: clearColor(clearColor), mainContextDrawables(0), frameCallbacks(0)
 {
     this->width = width;
     this->height = height;
@@ -68,8 +68,8 @@ void Window::startLoop()
         glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        for (IDrawable *drawable : drawables)
-            drawable->OnDraw();
+        renderMainContext();
+        renderUi();
 
         glfwSwapBuffers(handle);
         glfwPollEvents();
@@ -86,9 +86,9 @@ Window::~Window()
     destroy();
 }
 
-void Window::addDrawable(IDrawable *drawable)
+void Window::addMainContextDrawable(IDrawable *drawable)
 {
-    drawables.push_back(drawable);
+    mainContextDrawables.push_back(drawable);
 }
 
 void Window::addFrameCallback(IFrameCallback *callbackObj)
@@ -136,4 +136,15 @@ vec2 Window::getWidthAndHeight() const
 float Window::getAspect() const
 {
     return (float) width / (float) height;
+}
+
+void Window::renderMainContext()
+{
+    for (IDrawable *drawable : mainContextDrawables)
+        drawable->OnDraw();
+}
+
+void Window::renderUi()
+{
+
 }

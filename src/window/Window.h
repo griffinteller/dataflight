@@ -18,7 +18,7 @@ class Window
 private:
     GLFWwindow *handle;
     vec4 clearColor;
-    std::vector<IDrawable*> drawables;
+    std::vector<IDrawable*> mainContextDrawables;
     std::vector<IFrameCallback*> frameCallbacks;
     double lastFrameTime;
     double deltaTime;
@@ -32,6 +32,8 @@ private:
     void frameCallback();
     void updateDeltaTime();
     void updateDeltaCursorPos();
+    void renderMainContext();
+    void renderUi();
 
     static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
 
@@ -40,7 +42,7 @@ public:
     // Constructs window resources and makes it current opengl context (ie window will show up)
     Window(int width, int height, const vec4 &clearColor = vec4(1.0, 1.0, 1.0, 1.0));
 
-    void addDrawable(IDrawable *drawable);
+    void addMainContextDrawable(IDrawable *drawable);
     void addFrameCallback(IFrameCallback *callbackObj);  // called every frame after clearing but before drawing
 
     // starts render loop
