@@ -146,5 +146,13 @@ void Window::renderMainContext()
 
 void Window::renderUi()
 {
+    if (uiContext == nullptr)
+        return;
 
+    uiContext->render();
+}
+
+void Window::setUiContext(UiContext *uiContext)
+{
+    this->uiContext = uiContext;
 }

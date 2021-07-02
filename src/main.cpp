@@ -13,9 +13,11 @@ int main()
             0);
 
     DataCamera camera (&window, data, Transform(vec3(0, 0, 5)), 1);
+    UiContext uiContext (window.getHandle(), "#version 330 core");
 
     window.addMainContextDrawable(&camera);
     window.addFrameCallback(&camera);
+    window.setUiContext(&uiContext);
 
     window.startLoop();
 

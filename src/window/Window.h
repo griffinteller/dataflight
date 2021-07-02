@@ -12,6 +12,7 @@
 #include <window/IDrawable.h>
 #include <window/ICursorPosCallback.h>
 #include <window/IFrameCallback.h>
+#include <ui/UiContext.h>
 
 class Window
 {
@@ -19,6 +20,7 @@ private:
     GLFWwindow *handle;
     vec4 clearColor;
     std::vector<IDrawable*> mainContextDrawables;
+    UiContext *uiContext = nullptr;
     std::vector<IFrameCallback*> frameCallbacks;
     double lastFrameTime;
     double deltaTime;
@@ -44,6 +46,7 @@ public:
 
     void addMainContextDrawable(IDrawable *drawable);
     void addFrameCallback(IFrameCallback *callbackObj);  // called every frame after clearing but before drawing
+    void setUiContext(UiContext *uiContext);
 
     // starts render loop
     void startLoop();
