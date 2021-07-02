@@ -19,7 +19,6 @@ private:
     GLFWwindow *handle;
     vec4 clearColor;
     std::vector<IDrawable*> drawables;
-    std::vector<ICursorPosCallback*> cursorPosCallbacks;
     std::vector<IFrameCallback*> frameCallbacks;
     double lastFrameTime;
     double deltaTime;
@@ -35,7 +34,6 @@ private:
     void updateDeltaCursorPos();
 
     static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
-    static void cursorPosCallback(GLFWwindow *window, double xpos, double ypos);
 
 public:
 
@@ -43,7 +41,6 @@ public:
     Window(int width, int height, const vec4 &clearColor = vec4(1.0, 1.0, 1.0, 1.0));
 
     void addDrawable(IDrawable *drawable);
-    void addCursorPosCallback(ICursorPosCallback *callbackObj);
     void addFrameCallback(IFrameCallback *callbackObj);  // called every frame after clearing but before drawing
 
     // starts render loop

@@ -26,9 +26,13 @@ private:
     float pointSize;
     bool smoothed;
     Shader shader;
+    int world2ViewLoc;
+    int view2ClipLoc;
+    int pointSizeLoc;
 
     constexpr static float strafeSpeed = 5.0f;  // units per second
     constexpr static float rotateSpeed = 100.0f;  // degrees per pixel
+    constexpr static float pointSizeChangeSpeed = 1.0f; // units per second
 
     mat4 world2View() const;
     mat4 view2Clip() const;
@@ -39,7 +43,7 @@ private:
 public:
     explicit DataCamera(Window *window, DataRepresentation data, const Transform &transform = Transform(),
                         float pointSize = 1, float fovy = 45, float aspectRatio = 1, float nearFrustum = 0.1,
-                        float farFrustum = 100, bool smoothed = false);
+                        float farFrustum = 100);
 
     void OnDraw() const override;
     void OnFrame() override;

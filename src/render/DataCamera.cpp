@@ -13,16 +13,13 @@ void DataCamera::OnDraw() const
     glEnable(GL_DEPTH_TEST);
 
     shader.use();
-    uint id = shader.getID();
-
-    int world2ViewLoc = glGetUniformLocation(id, "world2View");
-    int view2ClipLoc = glGetUniformLocation(id, "view2Clip");
 
     mat4 world2ViewMat = world2View();
     mat4 view2ClipMat = view2Clip();
 
     glUniformMatrix4fv(world2ViewLoc, 1, GL_FALSE, glm::value_ptr(world2ViewMat));
     glUniformMatrix4fv(view2ClipLoc, 1, GL_FALSE, glm::value_ptr(view2ClipMat));
+    glUniform1f(pointSizeLoc, pointSize);
 
     uint VAO = data.getVAO();
 
@@ -60,12 +57,18 @@ const char *DataCamera::getFragSource()
 }
 
 DataCamera::DataCamera(Window *window, DataRepresentation data, const Transform &transform, float pointSize, float fovy,
-                       float aspectRatio, float nearFrustum, float farFrustum, bool smoothed)
+                       float aspectRatio, float nearFrustum, float farFrustum)
                        : window(window), data(std::move(data)), fovy(fovy), transform (transform),
                          aspectRatio(aspectRatio), nearFrustum(nearFrustum),
-                         farFrustum(farFrustum), pointSize(pointSize),
-                         smoothed(smoothed), shader(getVertSource(), getFragSource())
-{}
+                         farFrustum(farFrustum), pointSize(pointSize), shader(getVertSource(), getFragSource())
+{
+    shader.use();
+    uint id = shader.getID();
+
+    world2ViewLoc = glGetUniformLocation(id, "world2View");
+    view2ClipLoc = glGetUniformLocation(id, "view2Clip");
+    pointSizeLoc = glGetUniformLocation(id, "pointSize");
+}
 
 const DataRepresentation &DataCamera::getData() const
 {
@@ -200,6 +203,16 @@ void DataCamera::OnFrame()
         quat yaw = glm::angleAxis(glm::radians(deltaDegrees.x), vec3(0, 1, 0));
         quat pitch = glm::angleAxis(glm::radians(deltaDegrees.y), transform.getRight());
         transform.rotation = yaw * pitch * transform.rotation;
+    }
+
+    if (glfwGetKey(window->getHandle(), GLFW_KEY_I))
+    {
+        pointSize *= 1 + pointSizeChangeSpeed * (float) window->getDeltaTime();
+    }
+
+    if (glfwGetKey(window->getHandle(), GLFW_KEY_K))
+    {
+        pointSize /= 1 + pointSizeChangeSpeed * (float) window->getDeltaTime();
     }
 }
 

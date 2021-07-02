@@ -16,7 +16,7 @@ void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
 }
 
 Window::Window(int width, int height, const vec4 &clearColor)
-: clearColor(clearColor), drawables(0), cursorPosCallbacks(0), frameCallbacks(0)
+: clearColor(clearColor), drawables(0), frameCallbacks(0)
 {
     this->width = width;
     this->height = height;
@@ -47,7 +47,6 @@ Window::Window(int width, int height, const vec4 &clearColor)
     glViewport(0, 0, width, height);
 
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-    glfwSetCursorPosCallback(window, cursorPosCallback);
 
     handle = window;
 }
@@ -92,11 +91,6 @@ void Window::addDrawable(IDrawable *drawable)
     drawables.push_back(drawable);
 }
 
-void Window::addCursorPosCallback(ICursorPosCallback *callbackObj)
-{
-    cursorPosCallbacks.push_back(callbackObj);
-}
-
 void Window::addFrameCallback(IFrameCallback *callbackObj)
 {
     frameCallbacks.push_back(callbackObj);
@@ -106,12 +100,6 @@ void Window::frameCallback()
 {
     for (IFrameCallback *obj : frameCallbacks)
         obj->OnFrame();
-}
-
-void Window::cursorPosCallback(GLFWwindow *window, double xpos, double ypos)
-{
-    for(ICursorPosCallback *obj : activeWindow->cursorPosCallbacks)
-        obj->OnCursorPos(window, xpos, ypos);
 }
 
 void Window::updateDeltaTime()
