@@ -8,9 +8,13 @@
 
 #include <typedefs.h>
 #include <GLFW/glfw3.h>
+#include <stdimgui.h>
 
 class UiContext
 {
+private:
+    static void displayVisualizationSettings();
+
 public:
     UiContext(GLFWwindow *window, const char *glsl_version);
 
