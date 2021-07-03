@@ -27,7 +27,9 @@ void UiContext::render()
 
     // TODO: ui logic goes here
 
-    ImGui::ShowDemoWindow();
+    // ImGui::ShowDemoWindow();
+
+    displayVisualizationSettings();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -38,4 +40,15 @@ UiContext::~UiContext()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+}
+
+void UiContext::displayVisualizationSettings()
+{
+    ImGui::Begin("Visualization Settings");
+
+    static float pointSize = 1.0f;
+    const float step = 0.001f;
+    ImGui::InputScalar("Point Size", ImGuiDataType_Float, &pointSize, &step);
+
+    ImGui::End();
 }

@@ -211,7 +211,7 @@ void DataCamera::OnFrame()
 
     if (!Window::getMouseLocked())
     {
-        if (glfwGetMouseButton(window->getHandle(), 1))
+        if (glfwGetMouseButton(window->getHandle(), 0))
         {
             float height = window->getWidthAndHeight().y;
             vec2 deltaDegrees = window->getDeltaCursorPos() * -rotateSpeed / height;

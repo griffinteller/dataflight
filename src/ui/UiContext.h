@@ -12,6 +12,9 @@
 
 class UiContext
 {
+private:
+    static void displayVisualizationSettings();
+
 public:
     UiContext(GLFWwindow *window, const char *glsl_version);
 
