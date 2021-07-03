@@ -8,6 +8,7 @@
 
 #include <typedefs.h>
 #include <GLFW/glfw3.h>
+#include <stdimgui.h>
 
 class UiContext
 {

@@ -11,7 +11,7 @@
 #include <window/Window.h>
 #include <geometry/Transform.h>
 #include "Shader.h"
-#include "window/IDrawable.h"
+#include "window/CallbackInterfaces.h"
 
 class DataCamera : public IDrawable, public IFrameCallback
 {

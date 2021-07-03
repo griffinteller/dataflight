@@ -9,19 +9,26 @@
 #include <vector>
 #include <typedefs.h>
 #include <stddeps.h>
-#include <window/IDrawable.h>
-#include <window/ICursorPosCallback.h>
-#include <window/IFrameCallback.h>
 #include <ui/UiContext.h>
+#include "CallbackInterfaces.h"
 
 class Window
 {
 private:
     GLFWwindow *handle;
     vec4 clearColor;
+
     std::vector<IDrawable*> mainContextDrawables;
-    UiContext *uiContext = nullptr;
     std::vector<IFrameCallback*> frameCallbacks;
+    std::vector<IKeyCallback*> keyCallbacks;
+    std::vector<ICharCallback*> charCallbacks;
+    std::vector<ICursorPosCallback*> cursorPosCallbacks;
+    std::vector<ICursorEnterCallback*> cursorEnterCallbacks;
+    std::vector<IMouseButtonCallback*> mouseButtonCallbacks;
+    std::vector<IScrollCallback*> scrollCallbacks;
+    std::vector<IFileDropCallback*> fileDropCallbacks;
+
+    UiContext *uiContext = nullptr;
     double lastFrameTime;
     double deltaTime;
     vec2 lastFrameCursorPos;
@@ -31,7 +38,34 @@ private:
 
     static Window *activeWindow;
 
+    // functions actually passed to glfw. Just call the real callbacks on *activeWindow
+    static void staticKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
+    static void staticCharCallback(GLFWwindow *window, uint codepoint);
+    static void staticCursorPosCallback(GLFWwindow *window, double xpos, double ypos);
+    static void staticCursorEnterCallback(GLFWwindow *window, int entered);
+    static void staticMouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
+    static void staticScrollCallback(GLFWwindow *window, double xoffset, double yoffset);
+    static void staticFileDropCallback(GLFWwindow *window, int count, const char **paths);
+
+    // TODO: set up set to keep track of repeated key sends from OS
+    // TODO: set up scrollDelta
+
     void frameCallback();
+    void keyCallback(int key, int scancode, int action, int mods);
+    void charCallback(uint codepoint);
+
+    // screen coordinates, relative to top left
+    void cursorPosCallback(double xpos, double ypos);
+
+    // entered is a bool (1 = entered, 0 = left)
+    void cursorEnterCallback(int entered);
+
+    void mouseButtonCallback(int button, int action, int mods);
+    void scrollCallback(double xoffset, double yoffset);
+
+    // paths are temporary. If you want to keep them, you should make a deep copy.
+    void fileDropCallback(int count, const char** paths);
+
     void updateDeltaTime();
     void updateDeltaCursorPos();
     void renderMainContext();
@@ -46,6 +80,13 @@ public:
 
     void addMainContextDrawable(IDrawable *drawable);
     void addFrameCallback(IFrameCallback *callbackObj);  // called every frame after clearing but before drawing
+    void addKeyCallback(IKeyCallback *keyCallback);
+    void addCharCallback(ICharCallback *charCallback);
+    void addCursorPosCallback(ICursorPosCallback *cursorPosCallback);
+    void addCursorEnterCallback(ICursorEnterCallback *cursorEnterCallback);
+    void addMouseButtonCallback(IMouseButtonCallback *mouseButtonCallback);
+    void addScrollCallback(IScrollCallback *scrollCallback);
+    void addFileDropCallback(IFileDropCallback *fileDropCallback);
     void setUiContext(UiContext *uiContext);
 
     // starts render loop
@@ -59,6 +100,8 @@ public:
     GLFWwindow *getHandle() const;
     vec2 getWidthAndHeight() const;
     float getAspect() const;
+    static bool getKeyboardLocked() ;
+    static bool getMouseLocked() ;
 
     ~Window();
 };

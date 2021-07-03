@@ -16,7 +16,8 @@ void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
 }
 
 Window::Window(int width, int height, const vec4 &clearColor)
-: clearColor(clearColor), mainContextDrawables(0), frameCallbacks(0)
+: clearColor(clearColor), mainContextDrawables(0), frameCallbacks(0), keyCallbacks(0), charCallbacks(0),
+cursorPosCallbacks(0), cursorEnterCallbacks(0), mouseButtonCallbacks(0), scrollCallbacks(0), fileDropCallbacks(0)
 {
     this->width = width;
     this->height = height;
@@ -47,6 +48,13 @@ Window::Window(int width, int height, const vec4 &clearColor)
     glViewport(0, 0, width, height);
 
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+    glfwSetKeyCallback(window, staticKeyCallback);
+    glfwSetCharCallback(window, staticCharCallback);
+    glfwSetCursorPosCallback(window, staticCursorPosCallback);
+    glfwSetCursorEnterCallback(window, staticCursorEnterCallback);
+    glfwSetMouseButtonCallback(window, staticMouseButtonCallback);
+    glfwSetScrollCallback(window, staticScrollCallback);
+    glfwSetDropCallback(window, staticFileDropCallback);
 
     handle = window;
 }
@@ -155,4 +163,144 @@ void Window::renderUi()
 void Window::setUiContext(UiContext *uiContext)
 {
     this->uiContext = uiContext;
+}
+
+void Window::staticKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
+    activeWindow->keyCallback(key, scancode, action, mods);
+}
+
+void Window::staticCharCallback(GLFWwindow *window, uint codepoint)
+{
+    activeWindow->charCallback(codepoint);
+}
+
+void Window::staticCursorPosCallback(GLFWwindow *window, double xpos, double ypos)
+{
+    activeWindow->cursorPosCallback(xpos, ypos);
+}
+
+void Window::staticCursorEnterCallback(GLFWwindow *window, int entered)
+{
+    activeWindow->cursorEnterCallback(entered);
+}
+
+void Window::staticMouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
+{
+    activeWindow->mouseButtonCallback(button, action, mods);
+}
+
+void Window::staticScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
+{
+    activeWindow->scrollCallback(xoffset, yoffset);
+}
+
+void Window::staticFileDropCallback(GLFWwindow *window, int count, const char **paths)
+{
+    activeWindow->fileDropCallback(count, paths);
+}
+
+void Window::keyCallback(int key, int scancode, int action, int mods)
+{
+    if (ImGui::GetIO().WantCaptureKeyboard)
+        return;
+
+    for (IKeyCallback *callback : keyCallbacks)
+        callback->OnKey(key, scancode, action, mods);
+}
+
+void Window::charCallback(uint codepoint)
+{
+    if (ImGui::GetIO().WantCaptureKeyboard)
+        return;
+
+    for (ICharCallback *callback : charCallbacks)
+        callback->OnChar(codepoint);
+}
+
+void Window::cursorPosCallback(double xpos, double ypos)
+{
+    if (ImGui::GetIO().WantCaptureMouse)
+        return;
+
+    for (ICursorPosCallback *callback : cursorPosCallbacks)
+        callback->OnCursorPos(xpos, ypos);
+}
+
+void Window::cursorEnterCallback(int entered)
+{
+    if (ImGui::GetIO().WantCaptureMouse)
+        return;
+
+    for (ICursorEnterCallback *callback : cursorEnterCallbacks)
+        callback->OnCursorEnter(entered);
+}
+
+void Window::mouseButtonCallback(int button, int action, int mods)
+{
+    if (ImGui::GetIO().WantCaptureMouse)
+        return;
+
+    for (IMouseButtonCallback *callback : mouseButtonCallbacks)
+        callback->OnMouseButton(button, action, mods);
+}
+
+void Window::scrollCallback(double xoffset, double yoffset)
+{
+    if (ImGui::GetIO().WantCaptureMouse)
+        return;
+
+    for (IScrollCallback *callback : scrollCallbacks)
+        callback->OnScroll(xoffset, yoffset);
+}
+
+void Window::fileDropCallback(int count, const char **paths)
+{
+    for (IFileDropCallback *callback : fileDropCallbacks)
+        callback->OnFileDrop(count, paths);
+}
+
+void Window::addKeyCallback(IKeyCallback *keyCallback)
+{
+    keyCallbacks.push_back(keyCallback);
+}
+
+void Window::addCharCallback(ICharCallback *charCallback)
+{
+    charCallbacks.push_back(charCallback);
+}
+
+void Window::addCursorPosCallback(ICursorPosCallback *cursorPosCallback)
+{
+    cursorPosCallbacks.push_back(cursorPosCallback);
+}
+
+void Window::addCursorEnterCallback(ICursorEnterCallback *cursorEnterCallback)
+{
+    cursorEnterCallbacks.push_back(cursorEnterCallback);
+}
+
+void Window::addMouseButtonCallback(IMouseButtonCallback *mouseButtonCallback)
+{
+    mouseButtonCallbacks.push_back(mouseButtonCallback);
+}
+
+void Window::addScrollCallback(IScrollCallback *scrollCallback)
+{
+    scrollCallbacks.push_back(scrollCallback);
+}
+
+void Window::addFileDropCallback(IFileDropCallback *fileDropCallback)
+{
+    fileDropCallbacks.push_back(fileDropCallback);
+}
+
+bool Window::getKeyboardLocked()
+{
+    return ImGui::GetIO().WantCaptureKeyboard;
+}
+
+bool Window::getMouseLocked()
+{
+    return ImGui::GetIO().WantCaptureMouse;
 }

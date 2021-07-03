@@ -3,7 +3,6 @@
 //
 
 #include "UiContext.h"
-#include <stdimgui.h>
 #include <iostream>
 
 UiContext::UiContext(GLFWwindow *window, const char *glsl_version)
@@ -28,6 +27,8 @@ void UiContext::render()
 
     // TODO: ui logic goes here
 
+    ImGui::ShowDemoWindow();
+
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -38,4 +39,3 @@ UiContext::~UiContext()
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
-
