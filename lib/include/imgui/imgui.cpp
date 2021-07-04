@@ -97,7 +97,7 @@ CODE
  - Easy to hack and improve.
  - Minimize setup and maintenance.
  - Minimize state storage on user side.
- - Portable, minimize dependencies, run on target (consoles, phones, etc.).
+ - Portable, minimize lib, run on target (consoles, phones, etc.).
  - Efficient runtime and memory consumption.
 
  Designed for developers and content-creators, not the typical end-user! Some of the current weaknesses includes:
@@ -695,7 +695,7 @@ CODE
     - See documentation and comments at the top of imgui.cpp + effectively imgui.h.
     - Dozens of standalone example applications using e.g. OpenGL/DirectX are provided in the
       examples/ folder to explain how to integrate Dear ImGui with your own engine/application.
-    - The Wiki (https://github.com/ocornut/imgui/wiki) has many resources and links.
+    - The Wiki (https://github.com/ocornut/imgui/wiki) has many res and links.
     - The Glossary (https://github.com/ocornut/imgui/wiki/Glossary) page also may be useful.
     - Your programming IDE is your friend, find the type or function declaration to find comments
       associated with it.

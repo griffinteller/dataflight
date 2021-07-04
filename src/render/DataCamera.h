@@ -16,8 +16,8 @@
 class DataCamera : public IDrawable, public IFrameCallback
 {
 private:
-    Window *window;
-    DataRepresentation data;
+    Window &window;
+    DataRepresentation &data;
     Transform transform;
     float fovy;
     float aspectRatio;
@@ -25,7 +25,7 @@ private:
     float farFrustum;
     float pointSize;
     bool smoothed;
-    Shader shader;
+    Shader &shader;
     int world2ViewLoc;
     int view2ClipLoc;
     int pointSizeLoc;
@@ -37,18 +37,16 @@ private:
     mat4 world2View() const;
     mat4 view2Clip() const;
 
-    static const char* getVertSource();
-    static const char* getFragSource();
-
 public:
-    explicit DataCamera(Window *window, DataRepresentation data, const Transform &transform = Transform(),
+    explicit DataCamera(Window &window, DataRepresentation &data, Shader &shader,
+                        const Transform &transform = Transform(),
                         float pointSize = 1, float fovy = 45, float aspectRatio = 1, float nearFrustum = 0.1,
                         float farFrustum = 100);
 
     void OnDraw() const override;
     void OnFrame() override;
 
-    const Transform &getTransform() const;
+    Transform &getTransform();
 
     void setTransform(const Transform &transform);
 

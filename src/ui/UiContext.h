@@ -9,16 +9,20 @@
 #include <typedefs.h>
 #include <GLFW/glfw3.h>
 #include <stdimgui.h>
+#include <vector>
+#include "IUiWindow.h"
 
 class UiContext
 {
 private:
-    static void displayVisualizationSettings();
+    std::vector<IUiWindow*> uiWindows;
 
 public:
     UiContext(GLFWwindow *window, const char *glsl_version);
 
     void render();
+
+    void addUiWindow(IUiWindow *window);
 
     ~UiContext();
 };
