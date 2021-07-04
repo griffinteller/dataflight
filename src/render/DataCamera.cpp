@@ -38,29 +38,12 @@ mat4 DataCamera::view2Clip() const
     return glm::perspective(glm::radians(fovy), aspectRatio, nearFrustum, farFrustum);
 }
 
-const char *DataCamera::getVertSource()
-{
-    const char* source =
-#include "shaders/basic.vert"
-        ;
-
-    return source;
-}
-
-const char *DataCamera::getFragSource()
-{
-    const char* source =
-#include "shaders/basic.frag"
-    ;
-
-    return source;
-}
-
-DataCamera::DataCamera(Window *window, DataRepresentation data, const Transform &transform, float pointSize, float fovy,
-                       float aspectRatio, float nearFrustum, float farFrustum)
-                       : window(window), data(std::move(data)), fovy(fovy), transform (transform),
+DataCamera::DataCamera(Window &window, DataRepresentation &data, Shader &shader, const Transform &transform,
+                       float pointSize,
+                       float fovy, float aspectRatio, float nearFrustum, float farFrustum)
+                       : window (window), data (data), fovy(fovy), transform (transform),
                          aspectRatio(aspectRatio), nearFrustum(nearFrustum),
-                         farFrustum(farFrustum), pointSize(pointSize), shader(getVertSource(), getFragSource())
+                         farFrustum(farFrustum), pointSize(pointSize), shader (shader)
 {
     shader.use();
     uint id = shader.getID();
@@ -152,69 +135,69 @@ void DataCamera::setShader(const Shader &shader)
 
 void DataCamera::OnFrame()
 {
-    aspectRatio = window->getAspect();
+    aspectRatio = window.getAspect();
 
     if (!Window::getKeyboardLocked())
     {
-        if (glfwGetKey(window->getHandle(), GLFW_KEY_W))
+        if (glfwGetKey(window.getHandle(), GLFW_KEY_W))
         {
             vec3 back = transform.getBack();
-            vec3 toAdd = (float) (-strafeSpeed * window->getDeltaTime()) * back;
+            vec3 toAdd = (float) (-strafeSpeed * window.getDeltaTime()) * back;
             transform.position += toAdd;
         }
 
-        if (glfwGetKey(window->getHandle(), GLFW_KEY_S))
+        if (glfwGetKey(window.getHandle(), GLFW_KEY_S))
         {
             vec3 back = transform.getBack();
-            vec3 toAdd = (float) (strafeSpeed * window->getDeltaTime()) * back;
+            vec3 toAdd = (float) (strafeSpeed * window.getDeltaTime()) * back;
             transform.position += toAdd;
         }
 
-        if (glfwGetKey(window->getHandle(), GLFW_KEY_A))
+        if (glfwGetKey(window.getHandle(), GLFW_KEY_A))
         {
             vec3 right = transform.getRight();
-            vec3 toAdd = (float) (-strafeSpeed * window->getDeltaTime()) * right;
+            vec3 toAdd = (float) (-strafeSpeed * window.getDeltaTime()) * right;
             transform.position += toAdd;
         }
 
-        if (glfwGetKey(window->getHandle(), GLFW_KEY_D))
+        if (glfwGetKey(window.getHandle(), GLFW_KEY_D))
         {
             vec3 right = transform.getRight();
-            vec3 toAdd = (float) (strafeSpeed * window->getDeltaTime()) * right;
+            vec3 toAdd = (float) (strafeSpeed * window.getDeltaTime()) * right;
             transform.position += toAdd;
         }
 
-        if (glfwGetKey(window->getHandle(), GLFW_KEY_LEFT_SHIFT))
+        if (glfwGetKey(window.getHandle(), GLFW_KEY_LEFT_SHIFT))
         {
             vec3 up = transform.getUp();
-            vec3 toAdd = (float) (-strafeSpeed * window->getDeltaTime()) * up;
+            vec3 toAdd = (float) (-strafeSpeed * window.getDeltaTime()) * up;
             transform.position += toAdd;
         }
 
-        if (glfwGetKey(window->getHandle(), GLFW_KEY_SPACE))
+        if (glfwGetKey(window.getHandle(), GLFW_KEY_SPACE))
         {
             vec3 up = transform.getUp();
-            vec3 toAdd = (float) (strafeSpeed * window->getDeltaTime()) * up;
+            vec3 toAdd = (float) (strafeSpeed * window.getDeltaTime()) * up;
             transform.position += toAdd;
         }
 
-        if (glfwGetKey(window->getHandle(), GLFW_KEY_I))
+        if (glfwGetKey(window.getHandle(), GLFW_KEY_I))
         {
-            pointSize *= 1 + pointSizeChangeSpeed * (float) window->getDeltaTime();
+            pointSize *= 1 + pointSizeChangeSpeed * (float) window.getDeltaTime();
         }
 
-        if (glfwGetKey(window->getHandle(), GLFW_KEY_K))
+        if (glfwGetKey(window.getHandle(), GLFW_KEY_K))
         {
-            pointSize /= 1 + pointSizeChangeSpeed * (float) window->getDeltaTime();
+            pointSize /= 1 + pointSizeChangeSpeed * (float) window.getDeltaTime();
         }
     }
 
     if (!Window::getMouseLocked())
     {
-        if (glfwGetMouseButton(window->getHandle(), 0))
+        if (glfwGetMouseButton(window.getHandle(), 0))
         {
-            float height = window->getWidthAndHeight().y;
-            vec2 deltaDegrees = window->getDeltaCursorPos() * -rotateSpeed / height;
+            float height = window.getWidthAndHeight().y;
+            vec2 deltaDegrees = window.getDeltaCursorPos() * -rotateSpeed / height;
             quat yaw = glm::angleAxis(glm::radians(deltaDegrees.x), vec3(0, 1, 0));
             quat pitch = glm::angleAxis(glm::radians(deltaDegrees.y), transform.getRight());
             transform.rotation = yaw * pitch * transform.rotation;
@@ -222,7 +205,7 @@ void DataCamera::OnFrame()
     }
 }
 
-const Transform &DataCamera::getTransform() const
+Transform &DataCamera::getTransform()
 {
     return transform;
 }
