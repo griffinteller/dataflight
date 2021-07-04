@@ -75,7 +75,7 @@ private:
 
 public:
 
-    // Constructs window resources and makes it current opengl context (ie window will show up)
+    // Constructs window res and makes it current opengl context (ie window will show up)
     Window(int width, int height, const vec4 &clearColor = vec4(1.0, 1.0, 1.0, 1.0));
 
     void addMainContextDrawable(IDrawable *drawable);

@@ -97,7 +97,7 @@ CODE
  - Easy to hack and improve.
  - Minimize setup and maintenance.
  - Minimize state storage on user side.
- - Portable, minimize dependencies, run on target (consoles, phones, etc.).
+ - Portable, minimize lib, run on target (consoles, phones, etc.).
  - Efficient runtime and memory consumption.
 
  Designed for developers and content-creators, not the typical end-user! Some of the current weaknesses includes:
