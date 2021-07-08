@@ -13,12 +13,12 @@ int main()
             1000, 1000,
             0);
 
-    const char *vertSource =
-#include "shaders/basic.vert"
+    constexpr char vertSource[] =
+#include "shaders/rainbow.vert"
         ;
 
-    const char *fragSource =
-#include "shaders/basic.frag"
+    constexpr char fragSource[] =
+#include "shaders/rainbow.frag"
         ;
 
     Shader shader (vertSource, fragSource);

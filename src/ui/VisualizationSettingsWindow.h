@@ -9,15 +9,19 @@
 #include <render/DataCamera.h>
 #include "IUiWindow.h"
 
+#define FILE_DIALOG_KEY "OpenFileKey"
+
 class VisualizationSettingsWindow : public IUiWindow
 {
 private:
     DataCamera *camera;
+    bool isFileDialogOpen = false;
 
 public:
     explicit VisualizationSettingsWindow(DataCamera *camera);
 
     void display() override;
+    void displayChooseFile();
 };
 
 
