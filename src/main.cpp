@@ -3,6 +3,7 @@
 #include <render/DataCamera.h>
 #include <debug/DataGen.h>
 #include <ui/VisualizationSettingsWindow.h>
+#include <ui/DataSettingsWindow.h>
 
 int main()
 {
@@ -24,9 +25,12 @@ int main()
     Shader shader (vertSource, fragSource);
     DataCamera camera(window, data, shader, Transform(vec3(0, 0, 5)), 5);
     UiContext uiContext (window.getHandle(), "#version 330 core");
-    VisualizationSettingsWindow visSettings (&camera);
 
-    uiContext.addUiWindow(&visSettings);
+    VisualizationSettingsWindow visSettings (&camera);
+    DataSettingsWindow dataSettings;
+
+    visSettings.enable();
+    dataSettings.enable();
 
     window.addMainContextDrawable(&camera);
     window.addFrameCallback(&camera);

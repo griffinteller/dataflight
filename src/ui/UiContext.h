@@ -10,19 +10,27 @@
 #include <GLFW/glfw3.h>
 #include <stdimgui.h>
 #include <vector>
-#include "IUiWindow.h"
+#include <unordered_set>
+#include "UiWindow.h"
 
-class UiContext
+class UiContext  // singleton
 {
 private:
-    std::vector<IUiWindow*> uiWindows;
+    std::unordered_set<UiWindow*> uiWindows;
+    std::unordered_set<UiWindow*> toAdd;
+    std::unordered_set<UiWindow*> toRemove;
+
+    static UiContext *activeContext;
 
 public:
     UiContext(GLFWwindow *window, const char *glsl_version);
 
     void render();
 
-    void addUiWindow(IUiWindow *window);
+    void addUiWindow(UiWindow *window);
+    void removeUiWindow(UiWindow *window);
+
+    static UiContext *getActiveContext();
 
     ~UiContext();
 };

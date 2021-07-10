@@ -38,10 +38,10 @@ mat4 DataCamera::view2Clip() const
     return glm::perspective(glm::radians(fovy), aspectRatio, nearFrustum, farFrustum);
 }
 
-DataCamera::DataCamera(Window &window, DataRepresentation &data, Shader &shader, const Transform &transform,
+DataCamera::DataCamera(Window &window, DataRepresentation data, Shader &shader, const Transform &transform,
                        float pointSize,
                        float fovy, float aspectRatio, float nearFrustum, float farFrustum)
-                       : window (window), data (data), fovy(fovy), transform (transform),
+                       : window (window), data (std::move(data)), fovy(fovy), transform (transform),
                          aspectRatio(aspectRatio), nearFrustum(nearFrustum),
                          farFrustum(farFrustum), pointSize(pointSize), shader (shader)
 {
@@ -58,9 +58,9 @@ const DataRepresentation &DataCamera::getData() const
     return data;
 }
 
-void DataCamera::setData(const DataRepresentation &data)
+void DataCamera::setData(DataRepresentation data)
 {
-    DataCamera::data = data;
+    DataCamera::data = std::move(data);
 }
 
 float DataCamera::getFovy() const
@@ -113,22 +113,12 @@ void DataCamera::setPointSize(float pointSize)
     DataCamera::pointSize = pointSize;
 }
 
-bool DataCamera::isSmoothed() const
-{
-    return smoothed;
-}
-
-void DataCamera::setSmoothed(bool smoothed)
-{
-    DataCamera::smoothed = smoothed;
-}
-
 const Shader &DataCamera::getShader() const
 {
     return shader;
 }
 
-void DataCamera::setShader(const Shader &shader)
+void DataCamera::setShader(Shader &shader)
 {
     DataCamera::shader = shader;
 }
@@ -210,7 +200,7 @@ Transform &DataCamera::getTransform()
     return transform;
 }
 
-void DataCamera::setTransform(const Transform &transform)
+void DataCamera::setTransform(Transform transform)
 {
     DataCamera::transform = transform;
 }

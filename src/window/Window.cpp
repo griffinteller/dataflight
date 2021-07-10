@@ -15,7 +15,7 @@ void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
     activeWindow->height = height;
 }
 
-Window::Window(int width, int height, const vec4 &clearColor)
+Window::Window(int width, int height, vec4 clearColor)
 : clearColor(clearColor), mainContextDrawables(0), frameCallbacks(0), keyCallbacks(0), charCallbacks(0),
 cursorPosCallbacks(0), cursorEnterCallbacks(0), mouseButtonCallbacks(0), scrollCallbacks(0), fileDropCallbacks(0)
 {

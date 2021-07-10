@@ -2,7 +2,9 @@ R""(
 
 #version 330 core
 
-layout (location = 0) in vec3 pos;
+layout (location = 0) in float x;
+layout (location = 1) in float y;
+layout (location = 2) in float z;
 
 uniform mat4 world2View;
 uniform mat4 view2Clip;
@@ -19,7 +21,7 @@ vec3 hsv2rgb(vec3 c)
 
 void main()
 {
-    gl_Position = view2Clip * world2View * vec4(pos, 1.0);
+    gl_Position = view2Clip * world2View * vec4(x, y, z, 1.0);
     gl_PointSize = pointSize / gl_Position.w;
     color = hsv2rgb(vec3(gl_VertexID / 10.0, 1.0, 1.0)).xyzz;
 }
