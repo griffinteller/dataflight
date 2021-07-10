@@ -41,6 +41,7 @@ public:
     const std::vector<float> &getData() const;
     const std::vector<std::string> &getDimensionNames() const;
     int getDimensions() const;
+    int getPoints() const;
 
     void setDimension(int visualDim, int dataDim);
     void setDimension(int visualDim, std::string dataDimName);

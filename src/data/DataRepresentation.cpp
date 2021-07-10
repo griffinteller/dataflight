@@ -3,6 +3,7 @@
 //
 
 #include <glad/glad.h>
+#include <iostream>
 #include "DataRepresentation.h"
 
 DataRepresentation::DataRepresentation(std::vector<float> inData, std::vector<std::string> dimensionNames)
@@ -23,7 +24,7 @@ activeDimensionIndices {0, 1, 2}, VAO (0), vertexVBO (0)
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
-    glBufferData(GL_ARRAY_BUFFER, points * sizeof(float), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 3 * points * sizeof(float), data.data(), GL_STATIC_DRAW);
 
     for (int i = 0; i < 3; i++) // dimensions able to be active at once
     {
@@ -31,7 +32,7 @@ activeDimensionIndices {0, 1, 2}, VAO (0), vertexVBO (0)
         glEnableVertexAttribArray(i);
     }
 
-    syncDimsWithGPU();
+    //syncDimsWithGPU();
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -80,11 +81,18 @@ void DataRepresentation::syncDimsWithGPU()
 
     for (int i = 0; i < 3; i++)
     {
+        float *offset = ((float *) data.data()) + activeDimensionIndices[i] * points;
+
         glBufferSubData(
                 GL_ARRAY_BUFFER, i * sizeof(float) * points,
-                sizeof(float) * points, data.data() + activeDimensionIndices[i] * points);
+                sizeof(float) * points, offset);
     }
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+int DataRepresentation::getPoints() const
+{
+    return points;
 }

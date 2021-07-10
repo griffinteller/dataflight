@@ -1,6 +1,6 @@
 R""(
 
-#version 330 core
+#version 430 core
 
 layout (location = 0) in float x;
 layout (location = 1) in float y;

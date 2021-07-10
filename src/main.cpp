@@ -23,8 +23,8 @@ int main()
         ;
 
     Shader shader (vertSource, fragSource);
-    DataCamera camera(window, data, shader, Transform(vec3(0, 0, 5)), 5);
-    UiContext uiContext (window.getHandle(), "#version 330 core");
+    DataCamera camera (&window, &data, &shader, Transform(vec3(0, 0, 5)), 5);
+    UiContext uiContext (window.getHandle(), "#version 430 core");
 
     VisualizationSettingsWindow visSettings (&camera);
     DataSettingsWindow dataSettings;

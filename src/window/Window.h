@@ -72,6 +72,8 @@ private:
     void renderUi();
 
     static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
+    static void messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
+                                GLsizei length, const GLchar* message, const void* userParam);
 
 public:
 
