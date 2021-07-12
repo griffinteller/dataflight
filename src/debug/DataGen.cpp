@@ -21,7 +21,7 @@ DataRepresentation DataGen::cube(float width, int pointsPerSide) // points per s
         for (int yi = 0; yi < pointsPerSide; yi++)
             for (int zi = 0; zi < pointsPerSide; zi++)
             {
-                int vertIndex = 3 * (xi * pointsPerSide * pointsPerSide + yi * pointsPerSide + zi);
+                int vertIndex = (xi * pointsPerSide * pointsPerSide + yi * pointsPerSide + zi);
                 data[vertIndex] = startCorner.x + step * (float) xi;
                 data[vertIndex + totalPoints] = startCorner.y + step * (float) yi;
                 data[vertIndex + totalPoints * 2] = startCorner.z + step * (float) zi;

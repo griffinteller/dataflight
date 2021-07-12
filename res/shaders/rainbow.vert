@@ -23,7 +23,7 @@ void main()
 {
     gl_Position = view2Clip * world2View * vec4(x, y, z, 1.0);
     gl_PointSize = pointSize / gl_Position.w;
-    color = hsv2rgb(vec3(gl_VertexID / 10.0, 1.0, 1.0)).xyzz;
+    color = hsv2rgb(vec3(fract(gl_VertexID / 100.0), 1.0, 1.0)).xyzz;
 }
 
 )""

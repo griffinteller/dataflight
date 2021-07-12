@@ -71,7 +71,7 @@ int DataRepresentation::getDimensions() const
 
 void DataRepresentation::setDimension(int visualDim, int dataDim)
 {
-
+    activeDimensionIndices[visualDim] = dataDim;
 }
 
 void DataRepresentation::syncDimsWithGPU()
@@ -95,4 +95,23 @@ void DataRepresentation::syncDimsWithGPU()
 int DataRepresentation::getPoints() const
 {
     return points;
+}
+
+void DataRepresentation::setDimension(int visualDim, std::string dataDimName)
+{
+    setDimension(visualDim, dimensionIndices[dataDimName]);
+}
+
+void DataRepresentation::setDimensions(int dataDim0, int dataDim1, int dataDim2)
+{
+    activeDimensionIndices[0] = dataDim0;
+    activeDimensionIndices[1] = dataDim1;
+    activeDimensionIndices[2] = dataDim2;
+}
+
+void DataRepresentation::setDimensions(std::string dataDimName0, std::string dataDimName1, std::string dataDimName2)
+{
+    activeDimensionIndices[0] = dimensionIndices[dataDimName0];
+    activeDimensionIndices[1] = dimensionIndices[dataDimName1];
+    activeDimensionIndices[2] = dimensionIndices[dataDimName2];
 }
