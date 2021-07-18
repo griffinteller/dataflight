@@ -37,7 +37,7 @@ cursorPosCallbacks(0), cursorEnterCallbacks(0), mouseButtonCallbacks(0), scrollC
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // no legacy functions
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);  // needed for mac support, might as well just leave in windows code
 
-    GLFWwindow* window = glfwCreateWindow(width, height, "GLFW Window", glfwGetPrimaryMonitor(), nullptr);
+    GLFWwindow* window = glfwCreateWindow(width, height, "GLFW Window", nullptr, nullptr);
 
     if (window == nullptr)
     {

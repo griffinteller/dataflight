@@ -27,9 +27,6 @@ CSVLoader::CSVLoader(std::string inPath)
 
     for (int i = 0; i < columns.size(); i++)
     {
-        if (columns[i][0] == '"')
-            columns[i] = columns[i].substr(1, columns[i].size() - 2);
-
         columnIndices.emplace(columns[i], i);
     }
 }
@@ -90,9 +87,6 @@ void CSVLoader::loadFloatColumn(int columnIndex, float *out, int maxPoints) cons
         }
 
         std::string floatString = line.substr(floatStart, floatEnd - floatStart);
-
-        if (floatString[0] == '"')
-            floatString = floatString.substr(1, floatString.size() - 2);
 
         out[row] = std::stof(floatString);
     }

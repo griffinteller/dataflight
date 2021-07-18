@@ -12,6 +12,10 @@
 
 class CSVLoader
 {
+    /*
+     * Expects just floats, no quotes in csv
+     */
+
 private:
     std::string path;
     size_t rows;
