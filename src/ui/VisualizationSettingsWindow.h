@@ -7,11 +7,11 @@
 
 
 #include <render/DataCamera.h>
-#include "IUiWindow.h"
+#include "UiWindow.h"
 
 #define FILE_DIALOG_KEY "OpenFileKey"
 
-class VisualizationSettingsWindow : public IUiWindow
+class VisualizationSettingsWindow : public UiWindow
 {
 private:
     DataCamera *camera;

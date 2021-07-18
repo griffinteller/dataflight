@@ -2,10 +2,11 @@
 // Created by griff on 6/29/2021.
 //
 
+#include <algorithm>
 #include "Transform.h"
 
-Transform::Transform(vec3 position, quat rotation, vec3 scale) : position(position),
-                                                                 rotation(rotation), scale(scale)
+Transform::Transform(vec3 position, quat rotation, vec3 scale)
+: position(position), rotation(rotation), scale(scale)  // not movable because types are trivially-copiable
 {}
 
 mat4 Transform::local2World() const

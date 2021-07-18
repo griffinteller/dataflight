@@ -16,16 +16,15 @@
 class DataCamera : public IDrawable, public IFrameCallback
 {
 private:
-    Window &window;
-    DataRepresentation &data;
+    Window *window;
+    DataRepresentation *data;
     Transform transform;
     float fovy;
     float aspectRatio;
     float nearFrustum;
     float farFrustum;
     float pointSize;
-    bool smoothed;
-    Shader &shader;
+    Shader *shader;
     int world2ViewLoc;
     int view2ClipLoc;
     int pointSizeLoc;
@@ -38,7 +37,7 @@ private:
     mat4 view2Clip() const;
 
 public:
-    explicit DataCamera(Window &window, DataRepresentation &data, Shader &shader,
+    explicit DataCamera(Window *window, DataRepresentation *data, Shader *shader,
                         const Transform &transform = Transform(),
                         float pointSize = 1, float fovy = 45, float aspectRatio = 1, float nearFrustum = 0.1,
                         float farFrustum = 100);
@@ -48,10 +47,10 @@ public:
 
     Transform &getTransform();
 
-    void setTransform(const Transform &transform);
+    void setTransform(Transform transform);
 
-    const DataRepresentation &getData() const;
-    void setData(const DataRepresentation &data);
+    const DataRepresentation *getData() const;
+    void setData(DataRepresentation *data);
 
     float getFovy() const;
     void setFovy(float fovy);
@@ -68,11 +67,8 @@ public:
     float getPointSize() const;
     void setPointSize(float pointSize);
 
-    bool isSmoothed() const;
-    void setSmoothed(bool smoothed);
-
-    const Shader &getShader() const;
-    void setShader(const Shader &shader);
+    const Shader *getShader() const;
+    void setShader(Shader *shader);
 };
 
 

@@ -15,7 +15,15 @@ void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
     activeWindow->height = height;
 }
 
-Window::Window(int width, int height, const vec4 &clearColor)
+void GLAPIENTRY Window::messageCallback( GLenum source, GLenum type, GLuint id, GLenum severity,
+                                         GLsizei length, const GLchar* message, const void* userParam)
+{
+    fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+             ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+             type, severity, message );
+}
+
+Window::Window(int width, int height, vec4 clearColor)
 : clearColor(clearColor), mainContextDrawables(0), frameCallbacks(0), keyCallbacks(0), charCallbacks(0),
 cursorPosCallbacks(0), cursorEnterCallbacks(0), mouseButtonCallbacks(0), scrollCallbacks(0), fileDropCallbacks(0)
 {
@@ -24,12 +32,13 @@ cursorPosCallbacks(0), cursorEnterCallbacks(0), mouseButtonCallbacks(0), scrollC
     activeWindow = this;
 
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);  // compat versions
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);  // compat versions
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // no legacy functions
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);  // needed for mac support, might as well just leave in windows code
 
     GLFWwindow* window = glfwCreateWindow(width, height, "GLFW Window", nullptr, nullptr);
+
     if (window == nullptr)
     {
         std::cout << "Failed to create window!" << std::endl;
@@ -55,6 +64,12 @@ cursorPosCallbacks(0), cursorEnterCallbacks(0), mouseButtonCallbacks(0), scrollC
     glfwSetMouseButtonCallback(window, staticMouseButtonCallback);
     glfwSetScrollCallback(window, staticScrollCallback);
     glfwSetDropCallback(window, staticFileDropCallback);
+
+#ifdef DEBUG_OUTPUT
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glDebugMessageCallback(messageCallback, 0);
+#endif
 
     handle = window;
 }

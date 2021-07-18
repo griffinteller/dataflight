@@ -3,21 +3,36 @@
 //
 
 #include <glad/glad.h>
+#include <iostream>
 #include "DataRepresentation.h"
 
-DataRepresentation::DataRepresentation(std::vector<float> &inData)
-: data (std::move(inData)), VAO (0), vertexVBO (0)
+DataRepresentation::DataRepresentation(std::vector<float> inData, std::vector<std::string> dimensionNames)
+: data (std::move(inData)), dimensionNames (std::move(dimensionNames)), dimensionIndices (),
+activeDimensionIndices {0, 1, 2}, VAO (0), vertexVBO (0)
 {
+    dimensions = DataRepresentation::dimensionNames.size();
+    points = data.size() / dimensions;
+
+    for (int i = 0; i < dimensions; i++)
+    {
+        dimensionIndices.emplace(DataRepresentation::dimensionNames[i], i);
+    }
+
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &vertexVBO);
 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
-    glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 3 * points * sizeof(float), data.data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(float) * 3, 0);
-    glEnableVertexAttribArray(0);
+    for (int i = 0; i < 3; i++) // dimensions able to be active at once
+    {
+        glVertexAttribPointer(i, 1, GL_FLOAT, false, sizeof(float), (void *) (sizeof(float) * i * points));
+        glEnableVertexAttribArray(i);
+    }
+
+    //syncDimsWithGPU();
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -33,7 +48,70 @@ uint DataRepresentation::getSize() const
     return data.size();
 }
 
-const std::vector<float> &DataRepresentation::getVector()
+const std::vector<float> &DataRepresentation::getData() const
 {
     return data;
+}
+
+DataRepresentation::~DataRepresentation()
+{
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &vertexVBO);
+}
+
+const std::vector<std::string> &DataRepresentation::getDimensionNames() const
+{
+    return dimensionNames;
+}
+
+int DataRepresentation::getDimensions() const
+{
+    return dimensions;
+}
+
+void DataRepresentation::setDimension(int visualDim, int dataDim)
+{
+    activeDimensionIndices[visualDim] = dataDim;
+}
+
+void DataRepresentation::syncDimsWithGPU()
+{
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
+
+    for (int i = 0; i < 3; i++)
+    {
+        float *offset = ((float *) data.data()) + activeDimensionIndices[i] * points;
+
+        glBufferSubData(
+                GL_ARRAY_BUFFER, i * sizeof(float) * points,
+                sizeof(float) * points, offset);
+    }
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+int DataRepresentation::getPoints() const
+{
+    return points;
+}
+
+void DataRepresentation::setDimension(int visualDim, std::string dataDimName)
+{
+    setDimension(visualDim, dimensionIndices[dataDimName]);
+}
+
+void DataRepresentation::setDimensions(int dataDim0, int dataDim1, int dataDim2)
+{
+    activeDimensionIndices[0] = dataDim0;
+    activeDimensionIndices[1] = dataDim1;
+    activeDimensionIndices[2] = dataDim2;
+}
+
+void DataRepresentation::setDimensions(std::string dataDimName0, std::string dataDimName1, std::string dataDimName2)
+{
+    activeDimensionIndices[0] = dimensionIndices[dataDimName0];
+    activeDimensionIndices[1] = dimensionIndices[dataDimName1];
+    activeDimensionIndices[2] = dimensionIndices[dataDimName2];
 }

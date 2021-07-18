@@ -72,11 +72,13 @@ private:
     void renderUi();
 
     static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
+    static void messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
+                                GLsizei length, const GLchar* message, const void* userParam);
 
 public:
 
     // Constructs window res and makes it current opengl context (ie window will show up)
-    Window(int width, int height, const vec4 &clearColor = vec4(1.0, 1.0, 1.0, 1.0));
+    Window(int width, int height, vec4 clearColor = vec4(1.0, 1.0, 1.0, 1.0));
 
     void addMainContextDrawable(IDrawable *drawable);
     void addFrameCallback(IFrameCallback *callbackObj);  // called every frame after clearing but before drawing

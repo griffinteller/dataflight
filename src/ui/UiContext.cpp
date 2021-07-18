@@ -5,6 +5,8 @@
 #include "UiContext.h"
 #include <iostream>
 
+UiContext *UiContext::activeContext = nullptr;
+
 UiContext::UiContext(GLFWwindow *window, const char *glsl_version)
 {
     IMGUI_CHECKVERSION();
@@ -17,6 +19,8 @@ UiContext::UiContext(GLFWwindow *window, const char *glsl_version)
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
+
+    activeContext = this;
 }
 
 void UiContext::render()
@@ -24,6 +28,12 @@ void UiContext::render()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+
+    for (auto *window : toAdd)
+        uiWindows.emplace(window);
+
+    for (auto *window : toRemove)
+        uiWindows.erase(window);
 
     for (auto *window : uiWindows)
         window->display();
@@ -39,8 +49,18 @@ UiContext::~UiContext()
     ImGui::DestroyContext();
 }
 
-void UiContext::addUiWindow(IUiWindow *window)
+void UiContext::addUiWindow(UiWindow *window)
 {
-    uiWindows.push_back(window);
+    toAdd.emplace(window);
+}
+
+void UiContext::removeUiWindow(UiWindow *window)
+{
+    toRemove.emplace(window);
+}
+
+UiContext *UiContext::getActiveContext()
+{
+    return activeContext;
 }
 

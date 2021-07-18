@@ -1,6 +1,6 @@
 R""(
 
-#version 330 core
+#version 430 core
 
 out vec4 fragColor;
 
@@ -11,7 +11,7 @@ void main()
     if (armDist > 0.1)
         discard;
 
-    fragColor = vec4(0, 0, 0, 1.0);
+    fragColor = vec4(1, 1, 1, 1.0);
 }
 
 )""
