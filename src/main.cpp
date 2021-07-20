@@ -21,6 +21,7 @@ int main()
 
     DataCamera camera(&window, &data, &axes,Transform(vec3(0, 0, 3)), 5);
     camera.setDashLength(0.01);
+    camera.setFarFrustum(1000);
 
     UiContext uiContext (window.getHandle(), "#version 430 core");
 

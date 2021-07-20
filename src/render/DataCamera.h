@@ -36,9 +36,9 @@ private:
     int axesNegWorld2ViewLoc;
     int axesNegView2ClipLoc;
     int dashLengthLoc;
+    float strafeSpeed = 5.0f;  // units per second
+    float rotateSpeed = 100.0f;  // degrees per pixel
 
-    constexpr static float strafeSpeed = 5.0f;  // units per second
-    constexpr static float rotateSpeed = 100.0f;  // degrees per pixel
     constexpr static float pointSizeChangeSpeed = 1.0f;
 
     mat4 world2View() const;
@@ -85,6 +85,14 @@ public:
     float getDashLength() const;
 
     void setDashLength(float dashLength);
+
+    float getStrafeSpeed() const;
+
+    void setStrafeSpeed(float strafeSpeed);
+
+    float getRotateSpeed() const;
+
+    void setRotateSpeed(float rotateSpeed);
 };
 
 

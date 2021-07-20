@@ -259,3 +259,23 @@ float DataCamera::getDashLength() const {
 void DataCamera::setDashLength(float dashLength) {
     DataCamera::dashLength = dashLength;
 }
+
+float DataCamera::getStrafeSpeed() const
+{
+    return strafeSpeed;
+}
+
+void DataCamera::setStrafeSpeed(float strafeSpeed)
+{
+    DataCamera::strafeSpeed = strafeSpeed;
+}
+
+float DataCamera::getRotateSpeed() const
+{
+    return rotateSpeed;
+}
+
+void DataCamera::setRotateSpeed(float rotateSpeed)
+{
+    DataCamera::rotateSpeed = rotateSpeed;
+}
