@@ -17,9 +17,9 @@ int main()
 
     //DataRepresentation data = DataGen::gaussian(vec3(0, 0, 0), 1, 100, 0);
 
-    Axes axes (Axes::DefaultColors);
+    Axes axes (Axes::DefaultColors, 200);
 
-    DataCamera camera(&window, &data, &axes,Transform(vec3(0, 0, 3)), 5);
+    DataCamera camera(&window, &data, &axes, Transform(vec3(0, 0, 3)), 5);
     camera.setDashLength(0.01);
     camera.setFarFrustum(1000);
 
@@ -36,6 +36,4 @@ int main()
     window.setUiContext(&uiContext);
 
     window.startLoop();
-
-    glfwTerminate();
 }

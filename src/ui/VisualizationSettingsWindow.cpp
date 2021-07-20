@@ -34,5 +34,10 @@ void VisualizationSettingsWindow::display()
     ImGui::InputScalar("Rotate Speed", ImGuiDataType_Float, &rotSpeed, &step);
     camera->setRotateSpeed(rotSpeed);
 
+    float fov = camera->getFovy();
+    step = 1.0f;
+    ImGui::InputScalar("Field of View", ImGuiDataType_Float, &fov, &step);
+    camera->setFovy(fov);
+
     ImGui::End();
 }
