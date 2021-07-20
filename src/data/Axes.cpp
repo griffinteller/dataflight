@@ -13,6 +13,8 @@ const vec4 Axes::DefaultColors[] =
         };
 
 Axes::Axes(const vec4 colors[], float range)
+: positiveShader(getSolidVertShaderSource(), getSolidFragShaderSource()),
+  negativeShader(getDashedVertShaderSource(), getDashedFragShaderSource())
 {
     memcpy(Axes::colors, colors, 3 * sizeof(vec4));
 
@@ -79,10 +81,51 @@ Axes::Axes(const vec4 colors[], float range)
     glBindVertexArray(0);
 }
 
-uint Axes::getPositiveVAO() const {
+uint Axes::getPositiveVAO() const
+{
     return positiveVAO;
 }
 
-uint Axes::getNegativeVAO() const {
+uint Axes::getNegativeVAO() const
+{
     return negativeVAO;
+}
+
+
+const char *Axes::getSolidVertShaderSource()
+{
+    return
+#include "shaders/axes/solid.vert"
+        ;
+}
+
+const char *Axes::getDashedVertShaderSource()
+{
+    return
+#include "shaders/axes/dashed.vert"
+        ;
+}
+
+const char *Axes::getSolidFragShaderSource()
+{
+    return
+#include "shaders/axes/solid.frag"
+        ;
+}
+
+const char *Axes::getDashedFragShaderSource()
+{
+    return
+#include "shaders/axes/dashed.frag"
+        ;
+}
+
+const Shader &Axes::getPositiveShader() const
+{
+    return positiveShader;
+}
+
+const Shader &Axes::getNegativeShader() const
+{
+    return negativeShader;
 }

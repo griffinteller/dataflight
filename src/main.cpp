@@ -7,45 +7,6 @@
 #include <util/StringUtil.h>
 #include <data/CSVLoader.h>
 
-Shader getDataShader()
-{
-    constexpr char vertSource[] =
-#include "shaders/data/basic.vert"
-    ;
-
-    constexpr char fragSource[] =
-#include "shaders/data/basic.frag"
-    ;
-
-    return {vertSource, fragSource};
-}
-
-Shader getSolidAxesShader()
-{
-    constexpr char vertSource[] =
-#include "shaders/axes/solid.vert"
-    ;
-
-    constexpr char fragSource[] =
-#include "shaders/axes/solid.frag"
-    ;
-
-    return {vertSource, fragSource};
-}
-
-Shader getDashedAxesShader()
-{
-    constexpr char vertSource[] =
-#include "shaders/axes/dashed.vert"
-    ;
-
-    constexpr char fragSource[] =
-#include "shaders/axes/dashed.frag"
-    ;
-
-    return {vertSource, fragSource};
-}
-
 int main()
 {
     Window window (1920, 1080, vec4(0.0, 0.0, 0.0, 1.0), false);
@@ -58,12 +19,7 @@ int main()
 
     Axes axes (Axes::DefaultColors);
 
-    Shader dataShader = getDataShader();
-    Shader axesPosShader = getSolidAxesShader();
-    Shader axesNegShader = getDashedAxesShader();
-
-    DataCamera camera(&window, &data, &axes, &dataShader, &axesPosShader, &axesNegShader,
-                      Transform(vec3(0, 0, 3)), 5);
+    DataCamera camera(&window, &data, &axes,Transform(vec3(0, 0, 3)), 5);
     camera.setDashLength(0.01);
 
     UiContext uiContext (window.getHandle(), "#version 430 core");

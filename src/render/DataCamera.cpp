@@ -22,31 +22,30 @@ mat4 DataCamera::view2Clip() const
     return glm::perspective(glm::radians(fovy), aspectRatio, nearFrustum, farFrustum);
 }
 
-DataCamera::DataCamera(Window *window, DataRepresentation *data, Axes *axes, Shader *dataShader,
-                       Shader *axesSolidShader, Shader *axisDashedShader, const Transform &transform,
+DataCamera::DataCamera(Window *window, DataRepresentation *data, Axes *axes,
+                       const Transform &transform,
                        float pointSize, float fovy, float aspectRatio, float nearFrustum, float farFrustum,
                        float axisWidth, float dashLength)
                        : window (window), data (data), fovy(fovy), transform (transform),
                          aspectRatio(aspectRatio), nearFrustum(nearFrustum),
-                         farFrustum(farFrustum), pointSize(pointSize), dataShader (dataShader),
-                         axisWidth(axisWidth), axesPositiveShader (axesSolidShader),
-                         axesNegativeShader (axisDashedShader), axes (axes), dashLength(dashLength)
+                         farFrustum(farFrustum), pointSize(pointSize),
+                         axisWidth(axisWidth), axes (axes), dashLength(dashLength)
 {
-    dataShader->use();
-    uint id = dataShader->getID();
+    data->getShader().use();
+    uint id = data->getShader().getID();
 
     dataWorld2ViewLoc = glGetUniformLocation(id, "world2View");
     dataView2ClipLoc = glGetUniformLocation(id, "view2Clip");
     pointSizeLoc = glGetUniformLocation(id, "pointSize");
 
-    axesSolidShader->use();
-    id = axesSolidShader->getID();
+    axes->getPositiveShader().use();
+    id = axes->getPositiveShader().getID();
 
     axesPosWorld2ViewLoc = glGetUniformLocation(id, "world2View");
     axesPosView2ClipLoc = glGetUniformLocation(id, "view2Clip");
 
-    axisDashedShader->use();
-    id = axisDashedShader->getID();
+    axes->getNegativeShader().use();
+    id = axes->getNegativeShader().getID();
 
     axesNegWorld2ViewLoc = glGetUniformLocation(id, "world2View");
     axesNegView2ClipLoc = glGetUniformLocation(id, "view2Clip");
@@ -111,16 +110,6 @@ float DataCamera::getPointSize() const
 void DataCamera::setPointSize(float pointSize)
 {
     DataCamera::pointSize = pointSize;
-}
-
-const Shader * DataCamera::getShader() const
-{
-    return dataShader;
-}
-
-void DataCamera::setShader(Shader *shader)
-{
-    DataCamera::dataShader = shader;
 }
 
 void DataCamera::OnFrame()
@@ -210,7 +199,7 @@ void DataCamera::drawPoints() const
     glEnable(GL_PROGRAM_POINT_SIZE);
     glEnable(GL_DEPTH_TEST);
 
-    dataShader->use();
+    data->getShader().use();
 
     mat4 world2ViewMat = world2View();
     mat4 view2ClipMat = view2Clip();
@@ -233,7 +222,7 @@ void DataCamera::drawAxes() const
     glLineWidth(axisWidth);
 
     glBindVertexArray(axes->getPositiveVAO());
-    axesPositiveShader->use();
+    axes->getPositiveShader().use();
 
     mat4 world2ViewMat = world2View();
     mat4 view2ClipMat = view2Clip();
@@ -244,7 +233,7 @@ void DataCamera::drawAxes() const
     glDrawArrays(GL_LINES, 0, 6);
 
     glBindVertexArray(axes->getNegativeVAO());
-    axesNegativeShader->use();
+    axes->getNegativeShader().use();
 
     glUniformMatrix4fv(axesNegWorld2ViewLoc, 1, GL_FALSE, glm::value_ptr(world2ViewMat));
     glUniformMatrix4fv(axesNegView2ClipLoc, 1, GL_FALSE, glm::value_ptr(view2ClipMat));

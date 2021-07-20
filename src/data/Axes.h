@@ -7,6 +7,7 @@
 
 
 #include <typedefs.h>
+#include <render/Shader.h>
 
 class Axes {
 
@@ -16,9 +17,15 @@ private:
     uint positiveVBO;
     uint negativeVBO;
     vec4 colors[4];
-
+    Shader positiveShader;
+    Shader negativeShader;
 
     constexpr static uint VertexDataWidth = 7;
+
+    static const char *getSolidVertShaderSource();
+    static const char *getDashedVertShaderSource();
+    static const char *getSolidFragShaderSource();
+    static const char *getDashedFragShaderSource();
 
 public:
     const static vec4 DefaultColors[3];
@@ -28,6 +35,8 @@ public:
 
     uint getPositiveVAO() const;
     uint getNegativeVAO() const;
+    const Shader &getPositiveShader() const;
+    const Shader &getNegativeShader() const;
 };
 
 

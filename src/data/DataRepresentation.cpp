@@ -8,7 +8,8 @@
 
 DataRepresentation::DataRepresentation(std::vector<float> inData, std::vector<std::string> dimensionNames)
 : data (std::move(inData)), dimensionNames (std::move(dimensionNames)), dimensionIndices (),
-activeDimensionIndices {0, 1, 2}, VAO (0), vertexVBO (0)
+  activeDimensionIndices {0, 1, 2}, VAO (0), vertexVBO (0),
+  shader (getDefaultVertShaderSource(), getDefaultFragShaderSource())
 {
     dimensions = DataRepresentation::dimensionNames.size();
     points = data.size() / dimensions;
@@ -114,4 +115,21 @@ void DataRepresentation::setDimensions(std::string dataDimName0, std::string dat
     activeDimensionIndices[0] = dimensionIndices[dataDimName0];
     activeDimensionIndices[1] = dimensionIndices[dataDimName1];
     activeDimensionIndices[2] = dimensionIndices[dataDimName2];
+}
+
+const char *DataRepresentation::getDefaultVertShaderSource()
+{
+    return
+#include "shaders/data/basic.vert"
+        ;
+}
+
+const char *DataRepresentation::getDefaultFragShaderSource() {
+    return
+#include "shaders/data/basic.frag"
+        ;
+}
+
+const Shader &DataRepresentation::getShader() const {
+    return shader;
 }

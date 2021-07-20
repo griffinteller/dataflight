@@ -28,9 +28,6 @@ private:
     float pointSize;
     float axisWidth;
     float dashLength;
-    Shader *dataShader;
-    Shader *axesPositiveShader;
-    Shader *axesNegativeShader;
     int dataWorld2ViewLoc;
     int dataView2ClipLoc;
     int pointSizeLoc;
@@ -51,8 +48,8 @@ private:
     void drawAxes() const;
 
 public:
-    explicit DataCamera(Window *window, DataRepresentation *data, Axes *axes, Shader *dataShader,
-                        Shader *axesSolidShader, Shader *axisDashedShader, const Transform &transform = Transform(),
+    explicit DataCamera(Window *window, DataRepresentation *data, Axes *axes,
+                        const Transform &transform = Transform(),
                         float pointSize = 1, float fovy = 45, float aspectRatio = 1, float nearFrustum = 0.1,
                         float farFrustum = 100, float axisWidth = 50, float dashLength = 0.1);
 
@@ -80,9 +77,6 @@ public:
 
     float getPointSize() const;
     void setPointSize(float pointSize);
-
-    const Shader *getShader() const;
-    void setShader(Shader *shader);
 
     float getAxisWidth() const;
 
