@@ -19,7 +19,7 @@ void DataSettingsWindow::display()
 
     ImGui::Begin(WindowTitle);
 
-    if (loadedData)
+    if (camera->getData() != nullptr)
         displaySettings();
 
     // this order is necessary because short-circuit eval would cause button to not show up sometimes
@@ -37,11 +37,16 @@ DataSettingsWindow::~DataSettingsWindow()
 
 void DataSettingsWindow::createDataLoadingWindow()
 {
-    loadingWindow = new DataLoadingWindow(this);
+    loadingWindow = new DataLoadingWindow(this, camera);
     loadingWindow->enable();
 }
 
 void DataSettingsWindow::displaySettings()
 {
     ImGui::Text("Settings would go here");
+}
+
+DataSettingsWindow::DataSettingsWindow(DataCamera *camera)
+: camera(camera)
+{
 }

@@ -8,8 +8,10 @@
 
 void DataCamera::OnDraw() const
 {
-    drawPoints();
     drawAxes();
+
+    if (data != nullptr)
+        drawPoints();
 }
 
 mat4 DataCamera::world2View() const
@@ -31,15 +33,11 @@ DataCamera::DataCamera(Window *window, DataRepresentation *data, Axes *axes,
                          farFrustum(farFrustum), pointSize(pointSize),
                          axisWidth(axisWidth), axes (axes), dashLength(dashLength)
 {
-    data->getShader().use();
-    uint id = data->getShader().getID();
-
-    dataWorld2ViewLoc = glGetUniformLocation(id, "world2View");
-    dataView2ClipLoc = glGetUniformLocation(id, "view2Clip");
-    pointSizeLoc = glGetUniformLocation(id, "pointSize");
+    if (data != nullptr)
+        loadDataLocs();
 
     axes->getPositiveShader().use();
-    id = axes->getPositiveShader().getID();
+    uint id = axes->getPositiveShader().getID();
 
     axesPosWorld2ViewLoc = glGetUniformLocation(id, "world2View");
     axesPosView2ClipLoc = glGetUniformLocation(id, "view2Clip");
@@ -52,7 +50,7 @@ DataCamera::DataCamera(Window *window, DataRepresentation *data, Axes *axes,
     dashLengthLoc = glGetUniformLocation(id, "dashLength");
 }
 
-const DataRepresentation * DataCamera::getData() const
+const DataRepresentation *DataCamera::getData() const
 {
     return data;
 }
@@ -60,6 +58,7 @@ const DataRepresentation * DataCamera::getData() const
 void DataCamera::setData(DataRepresentation *data)
 {
     DataCamera::data = data;
+    loadDataLocs();
 }
 
 float DataCamera::getFovy() const
@@ -278,4 +277,14 @@ float DataCamera::getRotateSpeed() const
 void DataCamera::setRotateSpeed(float rotateSpeed)
 {
     DataCamera::rotateSpeed = rotateSpeed;
+}
+
+void DataCamera::loadDataLocs()
+{
+    data->getShader().use();
+    uint id = data->getShader().getID();
+
+    dataWorld2ViewLoc = glGetUniformLocation(id, "world2View");
+    dataView2ClipLoc = glGetUniformLocation(id, "view2Clip");
+    pointSizeLoc = glGetUniformLocation(id, "pointSize");
 }

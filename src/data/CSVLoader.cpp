@@ -12,7 +12,7 @@
 #define DELIM_LEN 1
 
 CSVLoader::CSVLoader(std::string inPath)
-: path (std::move(inPath)), columnIndices (inPath.size())
+: path (std::move(inPath))
 {
     std::ifstream file(path);
 
@@ -90,4 +90,20 @@ void CSVLoader::loadFloatColumn(int columnIndex, float *out, int maxPoints) cons
 
         out[row] = std::stof(floatString);
     }
+}
+
+const std::string &CSVLoader::getColumnName(int index) const
+{
+    if (index > columns.size())
+        throw std::out_of_range("Column size too big!");
+
+    return columns[index];
+}
+
+int CSVLoader::getColumnIndex(const std::string &name) const
+{
+    if (columnIndices.count(name) == 0)
+        throw std::out_of_range("No column named \"" + name + "\"!");
+
+    return columnIndices.at(name);
 }

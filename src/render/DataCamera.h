@@ -47,6 +47,8 @@ private:
     void drawPoints() const;
     void drawAxes() const;
 
+    void loadDataLocs();
+
 public:
     explicit DataCamera(Window *window, DataRepresentation *data, Axes *axes,
                         const Transform &transform = Transform(),
