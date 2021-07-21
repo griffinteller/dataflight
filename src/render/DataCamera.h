@@ -10,6 +10,7 @@
 #include <data/DataRepresentation.h>
 #include <window/Window.h>
 #include <geometry/Transform.h>
+#include <data/Axes.h>
 #include "Shader.h"
 #include "window/CallbackInterfaces.h"
 
@@ -18,29 +19,39 @@ class DataCamera : public IDrawable, public IFrameCallback
 private:
     Window *window;
     DataRepresentation *data;
+    Axes *axes;
     Transform transform;
     float fovy;
     float aspectRatio;
     float nearFrustum;
     float farFrustum;
     float pointSize;
-    Shader *shader;
-    int world2ViewLoc;
-    int view2ClipLoc;
+    float axisWidth;
+    float dashLength;
+    int dataWorld2ViewLoc;
+    int dataView2ClipLoc;
     int pointSizeLoc;
+    int axesPosWorld2ViewLoc;
+    int axesPosView2ClipLoc;
+    int axesNegWorld2ViewLoc;
+    int axesNegView2ClipLoc;
+    int dashLengthLoc;
+    float strafeSpeed = 5.0f;  // units per second
+    float rotateSpeed = 100.0f;  // degrees per pixel
 
-    constexpr static float strafeSpeed = 5.0f;  // units per second
-    constexpr static float rotateSpeed = 100.0f;  // degrees per pixel
-    constexpr static float pointSizeChangeSpeed = 1.0f; // units per second
+    constexpr static float pointSizeChangeSpeed = 1.0f;
 
     mat4 world2View() const;
     mat4 view2Clip() const;
 
+    void drawPoints() const;
+    void drawAxes() const;
+
 public:
-    explicit DataCamera(Window *window, DataRepresentation *data, Shader *shader,
+    explicit DataCamera(Window *window, DataRepresentation *data, Axes *axes,
                         const Transform &transform = Transform(),
                         float pointSize = 1, float fovy = 45, float aspectRatio = 1, float nearFrustum = 0.1,
-                        float farFrustum = 100);
+                        float farFrustum = 100, float axisWidth = 50, float dashLength = 0.1);
 
     void OnDraw() const override;
     void OnFrame() override;
@@ -67,8 +78,21 @@ public:
     float getPointSize() const;
     void setPointSize(float pointSize);
 
-    const Shader *getShader() const;
-    void setShader(Shader *shader);
+    float getAxisWidth() const;
+
+    void setAxisWidth(float axisWidth);
+
+    float getDashLength() const;
+
+    void setDashLength(float dashLength);
+
+    float getStrafeSpeed() const;
+
+    void setStrafeSpeed(float strafeSpeed);
+
+    float getRotateSpeed() const;
+
+    void setRotateSpeed(float rotateSpeed);
 };
 
 

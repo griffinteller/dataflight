@@ -10,6 +10,7 @@
 #include <typedefs.h>
 #include <string>
 #include <unordered_map>
+#include <render/Shader.h>
 
 class DataRepresentation
 {
@@ -28,8 +29,11 @@ private:
     int points;
     uint VAO;
     uint vertexVBO;
+    Shader shader;
 
     void syncDimsWithGPU();
+    static const char *getDefaultVertShaderSource();
+    static const char *getDefaultFragShaderSource();
 
 public:
 
@@ -42,6 +46,7 @@ public:
     const std::vector<std::string> &getDimensionNames() const;
     int getDimensions() const;
     int getPoints() const;
+    const Shader &getShader() const;
 
     void setDimension(int visualDim, int dataDim);
     void setDimension(int visualDim, std::string dataDimName);

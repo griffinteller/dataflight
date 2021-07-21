@@ -15,13 +15,11 @@ class VisualizationSettingsWindow : public UiWindow
 {
 private:
     DataCamera *camera;
-    bool isFileDialogOpen = false;
 
 public:
     explicit VisualizationSettingsWindow(DataCamera *camera);
 
     void display() override;
-    void displayChooseFile();
 };
 
 

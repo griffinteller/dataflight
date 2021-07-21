@@ -23,7 +23,7 @@ void GLAPIENTRY Window::messageCallback( GLenum source, GLenum type, GLuint id, 
              type, severity, message );
 }
 
-Window::Window(int width, int height, vec4 clearColor)
+Window::Window(int width, int height, vec4 clearColor, bool debug)
 : clearColor(clearColor), mainContextDrawables(0), frameCallbacks(0), keyCallbacks(0), charCallbacks(0),
 cursorPosCallbacks(0), cursorEnterCallbacks(0), mouseButtonCallbacks(0), scrollCallbacks(0), fileDropCallbacks(0)
 {
@@ -65,11 +65,13 @@ cursorPosCallbacks(0), cursorEnterCallbacks(0), mouseButtonCallbacks(0), scrollC
     glfwSetScrollCallback(window, staticScrollCallback);
     glfwSetDropCallback(window, staticFileDropCallback);
 
-#ifdef DEBUG_OUTPUT
-    glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(messageCallback, 0);
-#endif
+
+    if (debug)
+    {
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        glDebugMessageCallback(messageCallback, 0);
+    }
 
     handle = window;
 }

@@ -3,29 +3,13 @@
 //
 
 #include <glad/glad.h>
-#include <utility>
 #include <iostream>
 #include "DataCamera.h"
 
 void DataCamera::OnDraw() const
 {
-    glEnable(GL_PROGRAM_POINT_SIZE);
-    glEnable(GL_DEPTH_TEST);
-
-    shader->use();
-
-    mat4 world2ViewMat = world2View();
-    mat4 view2ClipMat = view2Clip();
-
-    glUniformMatrix4fv(world2ViewLoc, 1, GL_FALSE, glm::value_ptr(world2ViewMat));
-    glUniformMatrix4fv(view2ClipLoc, 1, GL_FALSE, glm::value_ptr(view2ClipMat));
-    glUniform1f(pointSizeLoc, pointSize);
-
-    uint VAO = data->getVAO();
-
-    glBindVertexArray(VAO);
-    glDrawArrays(GL_POINTS, 0, data->getPoints());
-    glBindVertexArray(0);
+    drawPoints();
+    drawAxes();
 }
 
 mat4 DataCamera::world2View() const
@@ -38,19 +22,34 @@ mat4 DataCamera::view2Clip() const
     return glm::perspective(glm::radians(fovy), aspectRatio, nearFrustum, farFrustum);
 }
 
-DataCamera::DataCamera(Window *window, DataRepresentation *data, Shader *shader, const Transform &transform,
-                       float pointSize,
-                       float fovy, float aspectRatio, float nearFrustum, float farFrustum)
+DataCamera::DataCamera(Window *window, DataRepresentation *data, Axes *axes,
+                       const Transform &transform,
+                       float pointSize, float fovy, float aspectRatio, float nearFrustum, float farFrustum,
+                       float axisWidth, float dashLength)
                        : window (window), data (data), fovy(fovy), transform (transform),
                          aspectRatio(aspectRatio), nearFrustum(nearFrustum),
-                         farFrustum(farFrustum), pointSize(pointSize), shader (shader)
+                         farFrustum(farFrustum), pointSize(pointSize),
+                         axisWidth(axisWidth), axes (axes), dashLength(dashLength)
 {
-    shader->use();
-    uint id = shader->getID();
+    data->getShader().use();
+    uint id = data->getShader().getID();
 
-    world2ViewLoc = glGetUniformLocation(id, "world2View");
-    view2ClipLoc = glGetUniformLocation(id, "view2Clip");
+    dataWorld2ViewLoc = glGetUniformLocation(id, "world2View");
+    dataView2ClipLoc = glGetUniformLocation(id, "view2Clip");
     pointSizeLoc = glGetUniformLocation(id, "pointSize");
+
+    axes->getPositiveShader().use();
+    id = axes->getPositiveShader().getID();
+
+    axesPosWorld2ViewLoc = glGetUniformLocation(id, "world2View");
+    axesPosView2ClipLoc = glGetUniformLocation(id, "view2Clip");
+
+    axes->getNegativeShader().use();
+    id = axes->getNegativeShader().getID();
+
+    axesNegWorld2ViewLoc = glGetUniformLocation(id, "world2View");
+    axesNegView2ClipLoc = glGetUniformLocation(id, "view2Clip");
+    dashLengthLoc = glGetUniformLocation(id, "dashLength");
 }
 
 const DataRepresentation * DataCamera::getData() const
@@ -111,16 +110,6 @@ float DataCamera::getPointSize() const
 void DataCamera::setPointSize(float pointSize)
 {
     DataCamera::pointSize = pointSize;
-}
-
-const Shader * DataCamera::getShader() const
-{
-    return shader;
-}
-
-void DataCamera::setShader(Shader *shader)
-{
-    DataCamera::shader = shader;
 }
 
 void DataCamera::OnFrame()
@@ -203,4 +192,90 @@ Transform &DataCamera::getTransform()
 void DataCamera::setTransform(Transform transform)
 {
     DataCamera::transform = transform;
+}
+
+void DataCamera::drawPoints() const
+{
+    glEnable(GL_PROGRAM_POINT_SIZE);
+    glEnable(GL_DEPTH_TEST);
+
+    data->getShader().use();
+
+    mat4 world2ViewMat = world2View();
+    mat4 view2ClipMat = view2Clip();
+
+    glUniformMatrix4fv(dataWorld2ViewLoc, 1, GL_FALSE, glm::value_ptr(world2ViewMat));
+    glUniformMatrix4fv(dataView2ClipLoc, 1, GL_FALSE, glm::value_ptr(view2ClipMat));
+    glUniform1f(pointSizeLoc, pointSize);
+
+    uint VAO = data->getVAO();
+
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_POINTS, 0, data->getPoints());
+    glBindVertexArray(0);
+}
+
+void DataCamera::drawAxes() const
+{
+    glEnable(GL_DEPTH_TEST);
+
+    glLineWidth(axisWidth);
+
+    glBindVertexArray(axes->getPositiveVAO());
+    axes->getPositiveShader().use();
+
+    mat4 world2ViewMat = world2View();
+    mat4 view2ClipMat = view2Clip();
+
+    glUniformMatrix4fv(axesPosWorld2ViewLoc, 1, GL_FALSE, glm::value_ptr(world2ViewMat));
+    glUniformMatrix4fv(axesPosView2ClipLoc, 1, GL_FALSE, glm::value_ptr(view2ClipMat));
+
+    glDrawArrays(GL_LINES, 0, 6);
+
+    glBindVertexArray(axes->getNegativeVAO());
+    axes->getNegativeShader().use();
+
+    glUniformMatrix4fv(axesNegWorld2ViewLoc, 1, GL_FALSE, glm::value_ptr(world2ViewMat));
+    glUniformMatrix4fv(axesNegView2ClipLoc, 1, GL_FALSE, glm::value_ptr(view2ClipMat));
+    glUniform1f(dashLengthLoc, dashLength);
+
+    glDrawArrays(GL_LINES, 0, 6);
+
+    glBindVertexArray(0);
+}
+
+float DataCamera::getAxisWidth() const {
+    return axisWidth;
+}
+
+void DataCamera::setAxisWidth(float axisWidth) {
+    DataCamera::axisWidth = axisWidth;
+}
+
+float DataCamera::getDashLength() const {
+    return dashLength;
+}
+
+void DataCamera::setDashLength(float dashLength) {
+    DataCamera::dashLength = dashLength;
+}
+
+float DataCamera::getStrafeSpeed() const
+{
+    return strafeSpeed;
+}
+
+void DataCamera::setStrafeSpeed(float strafeSpeed)
+{
+    DataCamera::strafeSpeed = strafeSpeed;
+}
+
+float DataCamera::getRotateSpeed() const
+{
+    return rotateSpeed;
+}
+
+void DataCamera::setRotateSpeed(float rotateSpeed)
+{
+    DataCamera::rotateSpeed = rotateSpeed;
 }

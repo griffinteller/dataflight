@@ -24,27 +24,20 @@ void VisualizationSettingsWindow::display()
     step = 1.0f;
     ImGui::InputFloat3("Camera Position", &camPosition.x);
 
-    if (ImGui::Button("Open File"))
-        isFileDialogOpen = true;
+    float camSpeed = camera->getStrafeSpeed();
+    step = camSpeed / 30.0f;
+    ImGui::InputScalar("Camera Speed", ImGuiDataType_Float, &camSpeed, &step);
+    camera->setStrafeSpeed(camSpeed);
 
-    if (isFileDialogOpen)
-        displayChooseFile();
+    float rotSpeed = camera->getRotateSpeed();
+    step = rotSpeed / 30.0f;
+    ImGui::InputScalar("Rotate Speed", ImGuiDataType_Float, &rotSpeed, &step);
+    camera->setRotateSpeed(rotSpeed);
+
+    float fov = camera->getFovy();
+    step = 1.0f;
+    ImGui::InputScalar("Field of View", ImGuiDataType_Float, &fov, &step);
+    camera->setFovy(fov);
 
     ImGui::End();
-}
-
-void VisualizationSettingsWindow::displayChooseFile()
-{
-    ImGuiFileDialog::Instance()->OpenDialog(FILE_DIALOG_KEY, "Open File", ".csv", ".");
-
-    if (ImGuiFileDialog::Instance()->Display(FILE_DIALOG_KEY))
-    {
-        if (ImGuiFileDialog::Instance()->IsOk())
-        {
-            std::cout << "Would open a file" << std::endl;
-        }
-
-        ImGuiFileDialog::Instance()->Close();
-        isFileDialogOpen = false;
-    }
 }

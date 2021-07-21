@@ -63,4 +63,3 @@ UiContext *UiContext::getActiveContext()
 {
     return activeContext;
 }
-
