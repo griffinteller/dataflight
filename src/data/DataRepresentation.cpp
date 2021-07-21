@@ -73,6 +73,7 @@ int DataRepresentation::getDimensions() const
 void DataRepresentation::setDimension(int visualDim, int dataDim)
 {
     activeDimensionIndices[visualDim] = dataDim;
+    syncDimsWithGPU();
 }
 
 void DataRepresentation::syncDimsWithGPU()
@@ -101,6 +102,7 @@ int DataRepresentation::getPoints() const
 void DataRepresentation::setDimension(int visualDim, std::string dataDimName)
 {
     setDimension(visualDim, dimensionIndices[dataDimName]);
+    syncDimsWithGPU();
 }
 
 void DataRepresentation::setDimensions(int dataDim0, int dataDim1, int dataDim2)
@@ -108,6 +110,7 @@ void DataRepresentation::setDimensions(int dataDim0, int dataDim1, int dataDim2)
     activeDimensionIndices[0] = dataDim0;
     activeDimensionIndices[1] = dataDim1;
     activeDimensionIndices[2] = dataDim2;
+    syncDimsWithGPU();
 }
 
 void DataRepresentation::setDimensions(std::string dataDimName0, std::string dataDimName1, std::string dataDimName2)
@@ -115,6 +118,7 @@ void DataRepresentation::setDimensions(std::string dataDimName0, std::string dat
     activeDimensionIndices[0] = dimensionIndices[dataDimName0];
     activeDimensionIndices[1] = dimensionIndices[dataDimName1];
     activeDimensionIndices[2] = dimensionIndices[dataDimName2];
+    syncDimsWithGPU();
 }
 
 const char *DataRepresentation::getDefaultVertShaderSource()
@@ -132,4 +136,9 @@ const char *DataRepresentation::getDefaultFragShaderSource() {
 
 const Shader &DataRepresentation::getShader() const {
     return shader;
+}
+
+const int *DataRepresentation::getActiveDimensionIndices() const
+{
+    return activeDimensionIndices;
 }

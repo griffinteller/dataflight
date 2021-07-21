@@ -11,22 +11,22 @@ int main()
 {
     Window window (1920, 1080, vec4(0.0, 0.0, 0.0, 1.0), false);
 
-    CSVLoader csvLoader = CSVLoader("/home/griffinteller/DataVisualization/res/data/spain_climate_clean.csv");
+    /*CSVLoader csvLoader = CSVLoader("/home/griffinteller/DataVisualization/res/data/spain_climate_clean.csv");
     std::vector<std::string> columns {"HourlyDewPointTemperature", "HourlyDryBulbTemperature", "HourlyRelativeHumidity"};
-    DataRepresentation data = DataRepresentation(csvLoader.getBatchedFloatData(columns), columns);
+    DataRepresentation data = DataRepresentation(csvLoader.getBatchedFloatData(columns), columns);*/
 
     //DataRepresentation data = DataGen::gaussian(vec3(0, 0, 0), 1, 100, 0);
 
     Axes axes (Axes::DefaultColors, 200);
 
-    DataCamera camera(&window, &data, &axes, Transform(vec3(0, 0, 3)), 5);
+    DataCamera camera(&window, nullptr, &axes, Transform(vec3(0, 0, 3)), 5);
     camera.setDashLength(0.01);
     camera.setFarFrustum(1000);
 
     UiContext uiContext (window.getHandle(), "#version 430 core");
 
     VisualizationSettingsWindow visSettings (&camera);
-    DataSettingsWindow dataSettings;
+    DataSettingsWindow dataSettings (&camera);
 
     visSettings.enable();
     dataSettings.enable();

@@ -6,6 +6,7 @@
 #define DATAVISUALIZATION_DATASETTINGSWINDOW_H
 
 
+#include <render/DataCamera.h>
 #include "UiWindow.h"
 #include "DataLoadingWindow.h"
 
@@ -14,16 +15,19 @@ class DataSettingsWindow : public UiWindow
     friend class DataLoadingWindow;
 
 private:
-    bool loadedData = false;
     bool needToDeleteLoadingWindow = false;
     DataLoadingWindow *loadingWindow = nullptr;  // keep this null when not pointing to heap (ie set to null after delete)
+    DataCamera *camera;
 
     const static char WindowTitle[];
 
     void displaySettings();
+
     void createDataLoadingWindow();
 
 public:
+    explicit DataSettingsWindow(DataCamera *camera);
+
     void display() override;
 
     ~DataSettingsWindow();

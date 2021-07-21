@@ -24,4 +24,13 @@ namespace StringUtil
 
         return result;
     }
+
+    std::string stringVec2NullSeparatedString(const std::vector<std::string> &items)
+    {
+        std::string result;
+        for (const std::string &str : items)
+            result += str + '\0';
+
+        return result;
+    }
 }

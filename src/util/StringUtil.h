@@ -12,6 +12,7 @@
 namespace StringUtil
 {
     std::vector<std::string> split(const std::string &str, const std::string &delim);
+    std::string stringVec2NullSeparatedString(const std::vector<std::string> &items);
 }
 
 

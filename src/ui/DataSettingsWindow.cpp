@@ -3,6 +3,7 @@
 //
 
 #include <stdimgui.h>
+#include <util/StringUtil.h>
 #include "DataSettingsWindow.h"
 
 const char DataSettingsWindow::WindowTitle[] = "Data Settings";
@@ -19,7 +20,7 @@ void DataSettingsWindow::display()
 
     ImGui::Begin(WindowTitle);
 
-    if (loadedData)
+    if (camera->getData() != nullptr)
         displaySettings();
 
     // this order is necessary because short-circuit eval would cause button to not show up sometimes
@@ -37,11 +38,36 @@ DataSettingsWindow::~DataSettingsWindow()
 
 void DataSettingsWindow::createDataLoadingWindow()
 {
-    loadingWindow = new DataLoadingWindow(this);
+    loadingWindow = new DataLoadingWindow(this, camera);
     loadingWindow->enable();
 }
 
 void DataSettingsWindow::displaySettings()
 {
-    ImGui::Text("Settings would go here");
+    static bool justLoaded = true;
+    static int visualDimIndices[3] {0, 0, 0};
+
+    DataRepresentation *data = camera->getData();
+    std::string dimensionNames = StringUtil::stringVec2NullSeparatedString(data->getDimensionNames());
+
+    if (justLoaded)
+    {
+        const int *activeDims = data->getActiveDimensionIndices();
+        memcpy(visualDimIndices, activeDims, sizeof(visualDimIndices));
+        justLoaded = false;
+    }
+
+    ImGui::Combo("X Dimension", &visualDimIndices[0], dimensionNames.c_str(), 3);
+    ImGui::Combo("Y Dimension", &visualDimIndices[1], dimensionNames.c_str(), 3);
+    ImGui::Combo("Z Dimension", &visualDimIndices[2], dimensionNames.c_str(), 3);
+
+    if (ImGui::Button("Apply"))
+    {
+        data->setDimensions(visualDimIndices[0], visualDimIndices[1], visualDimIndices[2]);
+    }
+}
+
+DataSettingsWindow::DataSettingsWindow(DataCamera *camera)
+: camera(camera)
+{
 }

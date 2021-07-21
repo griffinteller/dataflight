@@ -32,8 +32,12 @@ void UiContext::render()
     for (auto *window : toAdd)
         uiWindows.emplace(window);
 
+    toAdd.clear();
+
     for (auto *window : toRemove)
         uiWindows.erase(window);
+
+    toRemove.clear();
 
     for (auto *window : uiWindows)
         window->display();

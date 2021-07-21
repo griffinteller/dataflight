@@ -33,6 +33,10 @@ public:
 
     const std::vector<std::string> &getColumns() const;
 
+    // both throw on fail
+    const std::string &getColumnName(int index) const;
+    int getColumnIndex(const std::string &name) const;
+
     // vector is allocated on heap, so make sure to delete when done
     std::vector<float> getBatchedFloatData(const std::vector<std::string> &columnsToLoad);
 };
