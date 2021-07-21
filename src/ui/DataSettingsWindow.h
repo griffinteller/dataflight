@@ -22,6 +22,7 @@ private:
     const static char WindowTitle[];
 
     void displaySettings();
+
     void createDataLoadingWindow();
 
 public:

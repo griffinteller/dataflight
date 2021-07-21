@@ -47,6 +47,7 @@ public:
     int getDimensions() const;
     int getPoints() const;
     const Shader &getShader() const;
+    const int *getActiveDimensionIndices() const;
 
     void setDimension(int visualDim, int dataDim);
     void setDimension(int visualDim, std::string dataDimName);

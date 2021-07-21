@@ -50,7 +50,7 @@ DataCamera::DataCamera(Window *window, DataRepresentation *data, Axes *axes,
     dashLengthLoc = glGetUniformLocation(id, "dashLength");
 }
 
-const DataRepresentation *DataCamera::getData() const
+DataRepresentation * DataCamera::getData() const
 {
     return data;
 }

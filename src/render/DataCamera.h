@@ -62,7 +62,7 @@ public:
 
     void setTransform(Transform transform);
 
-    const DataRepresentation *getData() const;
+    DataRepresentation * getData() const;
     void setData(DataRepresentation *data);
 
     float getFovy() const;
