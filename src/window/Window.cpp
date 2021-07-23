@@ -340,3 +340,8 @@ bool Window::getMouseLocked()
 {
     return ImGui::GetIO().WantCaptureMouse;
 }
+
+void Window::addWindowSizeCallback(IWindowSizeCallback *windowSizeCallback)
+{
+    windowSizeCallbacks.push_back(windowSizeCallback);
+}

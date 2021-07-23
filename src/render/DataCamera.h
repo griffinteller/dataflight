@@ -38,7 +38,7 @@ private:
     int axesNegWorld2ViewLoc;
     int axesNegView2ClipLoc;
     int dashLengthLoc;
-    float strafeSpeed = 5.0f;  // units per second
+    float strafeSpeed = 20.0f;  // units per second
     float rotateSpeed = 100.0f;  // degrees per pixel
 
     constexpr static float pointSizeChangeSpeed = 1.0f;

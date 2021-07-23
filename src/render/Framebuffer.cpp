@@ -47,7 +47,7 @@ Framebuffer::Framebuffer(int width, int height, bool useDepthAndStencil, vec4 cl
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
-        throw std::runtime_error("Failed to create framebuffer!");
+        throw std::runtime_error("Failed to create postprocessing!");
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -9,7 +9,7 @@
 #include <typedefs.h>
 #include <window/CallbackInterfaces.h>
 
-class Framebuffer : IWindowSizeCallback
+class Framebuffer : public IWindowSizeCallback
 {
 private:
     uint FBO;

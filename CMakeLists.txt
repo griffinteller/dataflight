@@ -27,6 +27,6 @@ add_executable(DataVisualization lib/glad.c src/main.cpp src/window/Window.cpp
         lib/include/imgui/imgui_impl_glfw.cpp lib/include/imgui/imgui_impl_opengl3.cpp src/ui/UiContext.cpp
         src/ui/VisualizationSettingsWindow.cpp lib/include/ImGuiFileDialog/ImGuiFileDialog.cpp
         src/ui/DataLoadingWindow.cpp src/ui/UiWindow.cpp src/ui/DataSettingsWindow.cpp src/data/CSVLoader.cpp
-        src/util/StringUtil.cpp src/data/Axes.cpp src/data/Axes.h src/render/FramebufferDrawable.cpp src/render/FramebufferDrawable.h src/render/Framebuffer.cpp src/render/Framebuffer.h)
+        src/util/StringUtil.cpp src/data/Axes.cpp src/render/FramebufferPostprocessing.cpp src/render/Framebuffer.cpp src/render/postprocessing/FXAAFilter.cpp src/render/postprocessing/FXAAFilter.h)
 
 target_link_libraries(DataVisualization libglfw3.a -lGL -lX11 -lpthread -lXrandr -lXi -ldl)

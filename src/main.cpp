@@ -6,7 +6,8 @@
 #include <ui/DataSettingsWindow.h>
 #include <util/StringUtil.h>
 #include <data/CSVLoader.h>
-#include <render/FramebufferDrawable.h>
+#include <render/FramebufferPostprocessing.h>
+#include <render/postprocessing/FXAAFilter.h>
 
 int main()
 {
@@ -24,12 +25,14 @@ int main()
 
     Axes axes (Axes::DefaultColors, 200);
 
-    DataCamera camera(&window, nullptr, &axes, Transform(vec3(0, 0, 3)), 5);
+    DataCamera camera(&window, nullptr, &axes, Transform(vec3(0, 0, 3)), 10);
     camera.setFramebuffer(&mainContext);
     camera.setDashLength(0.01);
     camera.setFarFrustum(1000);
 
-    FramebufferDrawable framebufferDrawer (mainContext);
+    FramebufferPostprocessing postprocessing (mainContext);
+    FXAAFilter fxaa;
+    postprocessing.addFilter(&fxaa);
 
     UiContext uiContext (window.getHandle(), "#version 430 core");
 
@@ -40,9 +43,10 @@ int main()
     dataSettings.enable();
 
     window.addMainContextDrawable(&camera);
-    window.addMainContextDrawable(&framebufferDrawer);
+    window.addMainContextDrawable(&postprocessing);
     window.addFrameCallback(&camera);
     window.setUiContext(&uiContext);
+    window.addWindowSizeCallback(&mainContext);
 
     window.startLoop();
 }

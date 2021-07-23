@@ -92,6 +92,7 @@ public:
     void addMouseButtonCallback(IMouseButtonCallback *mouseButtonCallback);
     void addScrollCallback(IScrollCallback *scrollCallback);
     void addFileDropCallback(IFileDropCallback *fileDropCallback);
+    void addWindowSizeCallback(IWindowSizeCallback *windowSizeCallback);
     void setUiContext(UiContext *uiContext);
 
     // starts render loop
