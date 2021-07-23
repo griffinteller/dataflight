@@ -55,7 +55,7 @@ FramebufferPostprocessing::~FramebufferPostprocessing()
 
 void FramebufferPostprocessing::OnDraw() const
 {
-    if (filters.empty())
+    if (filters.empty() || !activeFilters[0])
     {
         passthroughShader.use();
         glBindVertexArray(VAO);
@@ -72,7 +72,19 @@ void FramebufferPostprocessing::OnDraw() const
     }
 }
 
-void FramebufferPostprocessing::addFilter(IPostprocessingFilter *filter)
+int FramebufferPostprocessing::addFilter(IPostprocessingFilter *filter, bool active)
 {
     filters.push_back(filter);
+    activeFilters.push_back(active);
+    return filters.size() - 1;
+}
+
+void FramebufferPostprocessing::setFilterActive(int index, bool active)
+{
+    activeFilters[index] = active;
+}
+
+bool FramebufferPostprocessing::isFilterActive(int index) const
+{
+    return activeFilters[index];
 }

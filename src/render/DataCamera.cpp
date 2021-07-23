@@ -8,13 +8,16 @@
 
 void DataCamera::OnDraw() const
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer->getFBO());
+    if (framebuffer != nullptr)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer->getFBO());
 
-    const vec4 &clearColor = framebuffer->getClearColor();
-    glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        const vec4 &clearColor = framebuffer->getClearColor();
+        framebuffer->matchViewport();
 
-    framebuffer->matchViewport();
+        glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
 
     drawAxes();
 

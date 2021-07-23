@@ -32,11 +32,11 @@ int main()
 
     FramebufferPostprocessing postprocessing (mainContext);
     FXAAFilter fxaa;
-    postprocessing.addFilter(&fxaa);
+    postprocessing.addFilter(&fxaa, false);
 
     UiContext uiContext (window.getHandle(), "#version 430 core");
 
-    VisualizationSettingsWindow visSettings (&camera);
+    VisualizationSettingsWindow visSettings(&camera, &postprocessing);
     DataSettingsWindow dataSettings (&camera);
 
     visSettings.enable();

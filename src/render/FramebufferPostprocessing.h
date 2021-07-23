@@ -30,6 +30,7 @@ private:
     uint VBO;
     Shader passthroughShader;
     std::vector<IPostprocessingFilter*> filters{};
+    std::vector<bool> activeFilters{};
 
     static const char *getDefaultVertShaderSource();
     static const char *getDefaultFragShaderSource();
@@ -39,7 +40,11 @@ public:
 
     void OnDraw() const override;
 
-    void addFilter(IPostprocessingFilter *filter);
+    // returns index of filter
+    int addFilter(IPostprocessingFilter *filter, bool active = true);
+
+    void setFilterActive(int index, bool active);
+    bool isFilterActive(int index) const;
 
     ~FramebufferPostprocessing();
 };
