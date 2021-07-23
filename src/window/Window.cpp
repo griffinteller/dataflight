@@ -8,11 +8,14 @@
 
 Window *Window::activeWindow = nullptr;
 
-void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
+void Window::staticWindowSizeCallback(GLFWwindow* window, int width, int height)
 {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, width, height);
     activeWindow->width = width;
     activeWindow->height = height;
+
+    activeWindow->windowSizeCallback(width, height);
 }
 
 void GLAPIENTRY Window::messageCallback( GLenum source, GLenum type, GLuint id, GLenum severity,
@@ -25,7 +28,8 @@ void GLAPIENTRY Window::messageCallback( GLenum source, GLenum type, GLuint id, 
 
 Window::Window(int width, int height, vec4 clearColor, bool debug)
 : clearColor(clearColor), mainContextDrawables(0), frameCallbacks(0), keyCallbacks(0), charCallbacks(0),
-cursorPosCallbacks(0), cursorEnterCallbacks(0), mouseButtonCallbacks(0), scrollCallbacks(0), fileDropCallbacks(0)
+cursorPosCallbacks(0), cursorEnterCallbacks(0), mouseButtonCallbacks(0), scrollCallbacks(0), fileDropCallbacks(0),
+windowSizeCallbacks(0)
 {
     this->width = width;
     this->height = height;
@@ -56,7 +60,7 @@ cursorPosCallbacks(0), cursorEnterCallbacks(0), mouseButtonCallbacks(0), scrollC
 
     glViewport(0, 0, width, height);
 
-    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+    glfwSetFramebufferSizeCallback(window, staticWindowSizeCallback);
     glfwSetKeyCallback(window, staticKeyCallback);
     glfwSetCharCallback(window, staticCharCallback);
     glfwSetCursorPosCallback(window, staticCursorPosCallback);
@@ -166,13 +170,20 @@ float Window::getAspect() const
 void Window::renderMainContext()
 {
     for (IDrawable *drawable : mainContextDrawables)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);  // by default, render to screen
+        glViewport(0, 0, width, height);  // by default, render to WHOLE screen
         drawable->OnDraw();
+    }
 }
 
 void Window::renderUi()
 {
     if (uiContext == nullptr)
         return;
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);  // by default, render to screen
+    glViewport(0, 0, width, height);  // by default, render to WHOLE screen
 
     uiContext->render();
 }
@@ -275,6 +286,14 @@ void Window::fileDropCallback(int count, const char **paths)
 {
     for (IFileDropCallback *callback : fileDropCallbacks)
         callback->OnFileDrop(count, paths);
+}
+
+void Window::windowSizeCallback(int width, int height)
+{
+    for (IWindowSizeCallback *callback : windowSizeCallbacks)
+    {
+        callback->OnWindowSize(width, height);
+    }
 }
 
 void Window::addKeyCallback(IKeyCallback *keyCallback)

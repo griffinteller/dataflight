@@ -13,6 +13,7 @@
 #include <data/Axes.h>
 #include "Shader.h"
 #include "window/CallbackInterfaces.h"
+#include "Framebuffer.h"
 
 class DataCamera : public IDrawable, public IFrameCallback
 {
@@ -21,6 +22,7 @@ private:
     DataRepresentation *data;
     Axes *axes;
     Transform transform;
+    Framebuffer *framebuffer;
     float fovy;
     float aspectRatio;
     float nearFrustum;
@@ -81,20 +83,18 @@ public:
     void setPointSize(float pointSize);
 
     float getAxisWidth() const;
-
     void setAxisWidth(float axisWidth);
 
     float getDashLength() const;
-
     void setDashLength(float dashLength);
 
     float getStrafeSpeed() const;
-
     void setStrafeSpeed(float strafeSpeed);
 
     float getRotateSpeed() const;
-
     void setRotateSpeed(float rotateSpeed);
+
+    void setFramebuffer(Framebuffer *framebuffer);
 };
 
 

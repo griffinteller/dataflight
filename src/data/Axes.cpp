@@ -129,3 +129,11 @@ const Shader &Axes::getNegativeShader() const
 {
     return negativeShader;
 }
+
+Axes::~Axes()
+{
+    glDeleteVertexArrays(1, &positiveVAO);
+    glDeleteVertexArrays(1, &negativeVAO);
+    glDeleteBuffers(1, &positiveVBO);
+    glDeleteBuffers(1, &negativeVBO);
+}

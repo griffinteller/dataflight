@@ -29,6 +29,7 @@ public:
 
     void addUiWindow(UiWindow *window);
     void removeUiWindow(UiWindow *window);
+    void initFrame();
 
     static UiContext *getActiveContext();
 

@@ -25,9 +25,10 @@ UiContext::UiContext(GLFWwindow *window, const char *glsl_version)
 
 void UiContext::render()
 {
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
+    initFrame();
+
+    ImGui::DockSpaceOverViewport(nullptr,
+                                 ImGuiDockNodeFlags_PassthruCentralNode | ImGuiDockNodeFlags_NoDockingInCentralNode);
 
     for (auto *window : toAdd)
         uiWindows.emplace(window);
@@ -66,4 +67,11 @@ void UiContext::removeUiWindow(UiWindow *window)
 UiContext *UiContext::getActiveContext()
 {
     return activeContext;
+}
+
+void UiContext::initFrame()
+{
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
 }

@@ -124,13 +124,13 @@ void DataRepresentation::setDimensions(std::string dataDimName0, std::string dat
 const char *DataRepresentation::getDefaultVertShaderSource()
 {
     return
-#include "shaders/data/basic.vert"
+#include "shaders/data/rainbow.vert"
         ;
 }
 
 const char *DataRepresentation::getDefaultFragShaderSource() {
     return
-#include "shaders/data/basic.frag"
+#include "shaders/data/rainbow.frag"
         ;
 }
 

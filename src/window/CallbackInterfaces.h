@@ -5,6 +5,8 @@
 #ifndef DATAVISUALIZATION_CALLBACKINTERFACES_H
 #define DATAVISUALIZATION_CALLBACKINTERFACES_H
 
+#include <typedefs.h>
+
 class IKeyCallback
 {
 public:
@@ -57,6 +59,12 @@ class IFrameCallback
 {
 public:
     virtual void OnFrame() = 0;
+};
+
+class IWindowSizeCallback
+{
+public:
+    virtual void OnWindowSize(int width, int height) = 0;
 };
 
 #endif //DATAVISUALIZATION_CALLBACKINTERFACES_H

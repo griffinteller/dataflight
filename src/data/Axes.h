@@ -37,6 +37,8 @@ public:
     uint getNegativeVAO() const;
     const Shader &getPositiveShader() const;
     const Shader &getNegativeShader() const;
+
+    ~Axes();
 };
 
 
