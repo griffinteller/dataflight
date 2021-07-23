@@ -13,6 +13,7 @@
 #include <data/Axes.h>
 #include "Shader.h"
 #include "window/CallbackInterfaces.h"
+#include "Framebuffer.h"
 
 class DataCamera : public IDrawable, public IFrameCallback
 {
@@ -21,6 +22,7 @@ private:
     DataRepresentation *data;
     Axes *axes;
     Transform transform;
+    Framebuffer *framebuffer = nullptr;
     float fovy;
     float aspectRatio;
     float nearFrustum;
@@ -28,15 +30,15 @@ private:
     float pointSize;
     float axisWidth;
     float dashLength;
-    int dataWorld2ViewLoc;
-    int dataView2ClipLoc;
-    int pointSizeLoc;
+    int dataWorld2ViewLoc = 0;
+    int dataView2ClipLoc = 0;
+    int pointSizeLoc = 0;
     int axesPosWorld2ViewLoc;
     int axesPosView2ClipLoc;
     int axesNegWorld2ViewLoc;
     int axesNegView2ClipLoc;
     int dashLengthLoc;
-    float strafeSpeed = 5.0f;  // units per second
+    float strafeSpeed = 20.0f;  // units per second
     float rotateSpeed = 100.0f;  // degrees per pixel
 
     constexpr static float pointSizeChangeSpeed = 1.0f;
@@ -55,7 +57,7 @@ public:
                         float pointSize = 1, float fovy = 45, float aspectRatio = 1, float nearFrustum = 0.1,
                         float farFrustum = 100, float axisWidth = 50, float dashLength = 0.1);
 
-    void OnDraw() const override;
+    void OnDraw() override;
     void OnFrame() override;
 
     Transform &getTransform();
@@ -81,20 +83,18 @@ public:
     void setPointSize(float pointSize);
 
     float getAxisWidth() const;
-
     void setAxisWidth(float axisWidth);
 
     float getDashLength() const;
-
     void setDashLength(float dashLength);
 
     float getStrafeSpeed() const;
-
     void setStrafeSpeed(float strafeSpeed);
 
     float getRotateSpeed() const;
-
     void setRotateSpeed(float rotateSpeed);
+
+    void setFramebuffer(Framebuffer *framebuffer);
 };
 
 

@@ -27,6 +27,7 @@ private:
     std::vector<IMouseButtonCallback*> mouseButtonCallbacks;
     std::vector<IScrollCallback*> scrollCallbacks;
     std::vector<IFileDropCallback*> fileDropCallbacks;
+    std::vector<IWindowSizeCallback*> windowSizeCallbacks;
 
     UiContext *uiContext = nullptr;
     double lastFrameTime;
@@ -46,6 +47,7 @@ private:
     static void staticMouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
     static void staticScrollCallback(GLFWwindow *window, double xoffset, double yoffset);
     static void staticFileDropCallback(GLFWwindow *window, int count, const char **paths);
+    static void staticWindowSizeCallback(GLFWwindow *window, int width, int height);
 
     // TODO: set up set to keep track of repeated key sends from OS
     // TODO: set up scrollDelta
@@ -66,12 +68,13 @@ private:
     // paths are temporary. If you want to keep them, you should make a deep copy.
     void fileDropCallback(int count, const char** paths);
 
+    void windowSizeCallback(int width, int height);
+
     void updateDeltaTime();
     void updateDeltaCursorPos();
     void renderMainContext();
     void renderUi();
 
-    static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
     static void messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
                                 GLsizei length, const GLchar* message, const void* userParam);
 
@@ -89,6 +92,7 @@ public:
     void addMouseButtonCallback(IMouseButtonCallback *mouseButtonCallback);
     void addScrollCallback(IScrollCallback *scrollCallback);
     void addFileDropCallback(IFileDropCallback *fileDropCallback);
+    void addWindowSizeCallback(IWindowSizeCallback *windowSizeCallback);
     void setUiContext(UiContext *uiContext);
 
     // starts render loop

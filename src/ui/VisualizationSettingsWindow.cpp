@@ -6,8 +6,8 @@
 #include <iostream>
 #include "VisualizationSettingsWindow.h"
 
-VisualizationSettingsWindow::VisualizationSettingsWindow(DataCamera *camera)
-: camera (camera)
+VisualizationSettingsWindow::VisualizationSettingsWindow(DataCamera *camera, FramebufferPostprocessing *postprocessing)
+: camera (camera), postprocessing (postprocessing)
 {
 }
 
@@ -38,6 +38,10 @@ void VisualizationSettingsWindow::display()
     step = 1.0f;
     ImGui::InputScalar("Field of View", ImGuiDataType_Float, &fov, &step);
     camera->setFovy(fov);
+
+    bool fxaaEnabled = postprocessing->isFilterActive(0);
+    ImGui::Checkbox("Anti-Aliasing (FXAA)", &fxaaEnabled);
+    postprocessing->setFilterActive(0, fxaaEnabled);
 
     ImGui::End();
 }

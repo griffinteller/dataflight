@@ -7,6 +7,7 @@
 
 
 #include <render/DataCamera.h>
+#include <render/FramebufferPostprocessing.h>
 #include "UiWindow.h"
 
 #define FILE_DIALOG_KEY "OpenFileKey"
@@ -15,9 +16,10 @@ class VisualizationSettingsWindow : public UiWindow
 {
 private:
     DataCamera *camera;
+    FramebufferPostprocessing *postprocessing;
 
 public:
-    explicit VisualizationSettingsWindow(DataCamera *camera);
+    VisualizationSettingsWindow(DataCamera *camera, FramebufferPostprocessing *postprocessing);
 
     void display() override;
 };

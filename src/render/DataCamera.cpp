@@ -6,8 +6,19 @@
 #include <iostream>
 #include "DataCamera.h"
 
-void DataCamera::OnDraw() const
+void DataCamera::OnDraw()
 {
+    if (framebuffer != nullptr)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer->getFBO());
+
+        const vec4 &clearColor = framebuffer->getClearColor();
+        framebuffer->matchViewport();
+
+        glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
     drawAxes();
 
     if (data != nullptr)
@@ -287,4 +298,9 @@ void DataCamera::loadDataLocs()
     dataWorld2ViewLoc = glGetUniformLocation(id, "world2View");
     dataView2ClipLoc = glGetUniformLocation(id, "view2Clip");
     pointSizeLoc = glGetUniformLocation(id, "pointSize");
+}
+
+void DataCamera::setFramebuffer(Framebuffer *framebuffer)
+{
+    DataCamera::framebuffer = framebuffer;
 }

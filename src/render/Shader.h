@@ -21,6 +21,8 @@ public:
     void use() const;
 
     uint getID() const;
+
+    ~Shader();
 };
 
 
