@@ -52,7 +52,7 @@ public:
 class IDrawable
 {
 public:
-    virtual void OnDraw() const = 0;
+    virtual void OnDraw() = 0;
 };
 
 class IFrameCallback

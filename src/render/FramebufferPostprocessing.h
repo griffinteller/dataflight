@@ -26,11 +26,13 @@ class FramebufferPostprocessing : public IDrawable
 
 private:
     const Framebuffer &incomingFramebuffer;
+    Framebuffer intermediateFramebuffer;
     uint VAO;
     uint VBO;
     Shader passthroughShader;
     std::vector<IPostprocessingFilter*> filters{};
     std::vector<bool> activeFilters{};
+    int totalActiveFilters = 0;
 
     static const char *getDefaultVertShaderSource();
     static const char *getDefaultFragShaderSource();
@@ -38,7 +40,7 @@ private:
 public:
     explicit FramebufferPostprocessing(const Framebuffer &framebuffer);
 
-    void OnDraw() const override;
+    void OnDraw() override;
 
     // returns index of filter
     int addFilter(IPostprocessingFilter *filter, bool active = true);

@@ -22,7 +22,7 @@ private:
     DataRepresentation *data;
     Axes *axes;
     Transform transform;
-    Framebuffer *framebuffer;
+    Framebuffer *framebuffer = nullptr;
     float fovy;
     float aspectRatio;
     float nearFrustum;
@@ -30,9 +30,9 @@ private:
     float pointSize;
     float axisWidth;
     float dashLength;
-    int dataWorld2ViewLoc;
-    int dataView2ClipLoc;
-    int pointSizeLoc;
+    int dataWorld2ViewLoc = 0;
+    int dataView2ClipLoc = 0;
+    int pointSizeLoc = 0;
     int axesPosWorld2ViewLoc;
     int axesPosView2ClipLoc;
     int axesNegWorld2ViewLoc;
@@ -57,7 +57,7 @@ public:
                         float pointSize = 1, float fovy = 45, float aspectRatio = 1, float nearFrustum = 0.1,
                         float farFrustum = 100, float axisWidth = 50, float dashLength = 0.1);
 
-    void OnDraw() const override;
+    void OnDraw() override;
     void OnFrame() override;
 
     Transform &getTransform();

@@ -6,7 +6,7 @@
 #include <iostream>
 #include "DataCamera.h"
 
-void DataCamera::OnDraw() const
+void DataCamera::OnDraw()
 {
     if (framebuffer != nullptr)
     {

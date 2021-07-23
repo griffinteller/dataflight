@@ -21,7 +21,9 @@ const char *FramebufferPostprocessing::getDefaultFragShaderSource()
 }
 
 FramebufferPostprocessing::FramebufferPostprocessing(const Framebuffer &framebuffer)
-: incomingFramebuffer(framebuffer), VAO(0), VBO(0), passthroughShader(getDefaultVertShaderSource(), getDefaultFragShaderSource())
+: incomingFramebuffer(framebuffer), VAO(0), VBO(0),
+  passthroughShader(getDefaultVertShaderSource(), getDefaultFragShaderSource()),
+  intermediateFramebuffer(framebuffer.getWidth(), framebuffer.getHeight(), false)
 {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -53,9 +55,9 @@ FramebufferPostprocessing::~FramebufferPostprocessing()
     glDeleteBuffers(1, &VBO);
 }
 
-void FramebufferPostprocessing::OnDraw() const
+void FramebufferPostprocessing::OnDraw()
 {
-    if (filters.empty() || !activeFilters[0])
+    if (totalActiveFilters == 0)
     {
         passthroughShader.use();
         glBindVertexArray(VAO);
@@ -63,12 +65,54 @@ void FramebufferPostprocessing::OnDraw() const
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindVertexArray(0);
     }
-    else if (filters.size() == 1)
+    else if (totalActiveFilters == 1)
     {
-        filters[0]->Apply(nullptr, &incomingFramebuffer, VAO);
-    } else
+        int i = 0;
+        while (i < filters.size())
+        {
+            if (activeFilters[i])
+            {
+                filters[i]->Apply(nullptr, &incomingFramebuffer, VAO);
+                return;
+            }
+
+            i++;
+        }
+    }
+    else
     {
-        throw std::domain_error("More than 1 postprocessing filter is not supported at this time.");
+        int firstActiveIndex = filters.size();
+        int lastActiveIndex = 0;
+
+        for (int i = 0 ; i < filters.size(); i++)
+        {
+            if (activeFilters[i])
+            {
+                if (i < firstActiveIndex)
+                    firstActiveIndex = i;
+                else if (i > lastActiveIndex)  // else is okay because we know there are at least two active filters
+                    lastActiveIndex = i;
+            }
+        }
+
+        int incomingWidth = incomingFramebuffer.getWidth(), incomingHeight = incomingFramebuffer.getHeight();
+        int intermediateWidth = intermediateFramebuffer.getWidth(), intermediateHeight = intermediateFramebuffer.getHeight();
+
+        if (incomingWidth != intermediateWidth || incomingHeight != intermediateHeight)
+        {
+            intermediateFramebuffer.setWidthAndHeight(incomingWidth, incomingHeight);
+        }
+
+        intermediateFramebuffer.matchViewport();
+        filters[firstActiveIndex]->Apply(&intermediateFramebuffer, &incomingFramebuffer, VAO);
+
+        for (int i = 1; i < filters.size() - 1; i++)
+        {
+            if (activeFilters[i])
+                filters[i]->Apply(&intermediateFramebuffer, &intermediateFramebuffer, VAO);
+        }
+
+        filters[lastActiveIndex]->Apply(nullptr, &intermediateFramebuffer, VAO);
     }
 }
 
@@ -76,12 +120,26 @@ int FramebufferPostprocessing::addFilter(IPostprocessingFilter *filter, bool act
 {
     filters.push_back(filter);
     activeFilters.push_back(active);
+
+    if (active)
+        totalActiveFilters += 1;
+
     return filters.size() - 1;
 }
 
 void FramebufferPostprocessing::setFilterActive(int index, bool active)
 {
-    activeFilters[index] = active;
+    bool old = activeFilters[index];
+
+    if (old != active)
+    {
+        activeFilters[index] = active;
+
+        if (active)
+            totalActiveFilters += 1;
+        else
+            totalActiveFilters -= 1;
+    }
 }
 
 bool FramebufferPostprocessing::isFilterActive(int index) const

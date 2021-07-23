@@ -8,6 +8,7 @@
 #include <data/CSVLoader.h>
 #include <render/FramebufferPostprocessing.h>
 #include <render/postprocessing/FXAAFilter.h>
+#include <render/postprocessing/InvertFilter.h>
 
 int main()
 {
