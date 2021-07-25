@@ -13,8 +13,8 @@ const vec4 Axes::DefaultColors[] =
         };
 
 Axes::Axes(const vec4 colors[], float range)
-: positiveShader(getSolidVertShaderSource(), getSolidFragShaderSource()),
-  negativeShader(getDashedVertShaderSource(), getDashedFragShaderSource())
+: positiveShader(getMainVertShaderSource(), getSolidFragShaderSource(), getMainGeomShaderSource()),
+  negativeShader(getMainVertShaderSource(), getDashedFragShaderSource(), getMainGeomShaderSource())
 {
     memcpy(Axes::colors, colors, 3 * sizeof(vec4));
 
@@ -26,16 +26,22 @@ Axes::Axes(const vec4 colors[], float range)
     glBindVertexArray(positiveVAO);
     glBindBuffer(GL_ARRAY_BUFFER, positiveVBO);
 
+
     const float positiveVerts[] =
             {
+                // x quad
                 0.0, 0.0, 0.0,
                 Axes::colors[0].x, Axes::colors[0].y, Axes::colors[0].z, Axes::colors[0].w,
                 range, 0.0, 0.0,
                 Axes::colors[0].x, Axes::colors[0].y, Axes::colors[0].z, Axes::colors[0].w,
+
+                // y quad
                 0.0, 0.0, 0.0,
                 Axes::colors[1].x, Axes::colors[1].y, Axes::colors[1].z, Axes::colors[1].w,
                 0.0, range, 0.0,
                 Axes::colors[1].x, Axes::colors[1].y, Axes::colors[1].z, Axes::colors[1].w,
+
+                // z quad
                 0.0, 0.0, 0.0,
                 Axes::colors[2].x, Axes::colors[2].y, Axes::colors[2].z, Axes::colors[2].w,
                 0.0, 0.0, range,
@@ -55,14 +61,19 @@ Axes::Axes(const vec4 colors[], float range)
 
     const float negativeVerts[] =
             {
+                    // x quad
                     0.0, 0.0, 0.0,
                     Axes::colors[0].x, Axes::colors[0].y, Axes::colors[0].z, Axes::colors[0].w,
                     -range, 0.0, 0.0,
                     Axes::colors[0].x, Axes::colors[0].y, Axes::colors[0].z, Axes::colors[0].w,
+
+                    // y quad
                     0.0, 0.0, 0.0,
                     Axes::colors[1].x, Axes::colors[1].y, Axes::colors[1].z, Axes::colors[1].w,
                     0.0, -range, 0.0,
                     Axes::colors[1].x, Axes::colors[1].y, Axes::colors[1].z, Axes::colors[1].w,
+
+                    // z quad
                     0.0, 0.0, 0.0,
                     Axes::colors[2].x, Axes::colors[2].y, Axes::colors[2].z, Axes::colors[2].w,
                     0.0, 0.0, -range,
@@ -92,17 +103,10 @@ uint Axes::getNegativeVAO() const
 }
 
 
-const char *Axes::getSolidVertShaderSource()
+const char *Axes::getMainVertShaderSource()
 {
     return
-#include "shaders/axes/solid.vert"
-        ;
-}
-
-const char *Axes::getDashedVertShaderSource()
-{
-    return
-#include "shaders/axes/dashed.vert"
+#include "shaders/axes/main.vert"
         ;
 }
 
@@ -136,4 +140,11 @@ Axes::~Axes()
     glDeleteVertexArrays(1, &negativeVAO);
     glDeleteBuffers(1, &positiveVBO);
     glDeleteBuffers(1, &negativeVBO);
+}
+
+const char *Axes::getMainGeomShaderSource()
+{
+    return
+#include "shaders/axes/main.geom"
+        ;
 }

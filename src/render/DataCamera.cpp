@@ -52,12 +52,14 @@ DataCamera::DataCamera(Window *window, DataRepresentation *data, Axes *axes,
 
     axesPosWorld2ViewLoc = glGetUniformLocation(id, "world2View");
     axesPosView2ClipLoc = glGetUniformLocation(id, "view2Clip");
+    axesPosLineWidthLoc = glGetUniformLocation(id, "lineWidth");
 
     axes->getNegativeShader().use();
     id = axes->getNegativeShader().getID();
 
     axesNegWorld2ViewLoc = glGetUniformLocation(id, "world2View");
     axesNegView2ClipLoc = glGetUniformLocation(id, "view2Clip");
+    axesNegLineWidthLoc = glGetUniformLocation(id, "lineWidth");
     dashLengthLoc = glGetUniformLocation(id, "dashLength");
 }
 
@@ -222,14 +224,11 @@ void DataCamera::drawPoints() const
 
     glBindVertexArray(VAO);
     glDrawArrays(GL_POINTS, 0, data->getPoints());
-    glBindVertexArray(0);
 }
 
 void DataCamera::drawAxes() const
 {
     glEnable(GL_DEPTH_TEST);
-
-    glLineWidth(axisWidth);
 
     glBindVertexArray(axes->getPositiveVAO());
     axes->getPositiveShader().use();
@@ -239,6 +238,7 @@ void DataCamera::drawAxes() const
 
     glUniformMatrix4fv(axesPosWorld2ViewLoc, 1, GL_FALSE, glm::value_ptr(world2ViewMat));
     glUniformMatrix4fv(axesPosView2ClipLoc, 1, GL_FALSE, glm::value_ptr(view2ClipMat));
+    glUniform1f(axesPosLineWidthLoc, axisWidth);
 
     glDrawArrays(GL_LINES, 0, 6);
 
@@ -247,11 +247,10 @@ void DataCamera::drawAxes() const
 
     glUniformMatrix4fv(axesNegWorld2ViewLoc, 1, GL_FALSE, glm::value_ptr(world2ViewMat));
     glUniformMatrix4fv(axesNegView2ClipLoc, 1, GL_FALSE, glm::value_ptr(view2ClipMat));
+    glUniform1f(axesNegLineWidthLoc, axisWidth);
     glUniform1f(dashLengthLoc, dashLength);
 
     glDrawArrays(GL_LINES, 0, 6);
-
-    glBindVertexArray(0);
 }
 
 float DataCamera::getAxisWidth() const {

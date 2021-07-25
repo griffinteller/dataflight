@@ -22,8 +22,8 @@ private:
 
     constexpr static uint VertexDataWidth = 7;
 
-    static const char *getSolidVertShaderSource();
-    static const char *getDashedVertShaderSource();
+    static const char *getMainVertShaderSource();
+    static const char *getMainGeomShaderSource();
     static const char *getSolidFragShaderSource();
     static const char *getDashedFragShaderSource();
 

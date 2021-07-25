@@ -6,7 +6,7 @@
 #include <stddeps.h>
 
 FXAAFilter::FXAAFilter()
-: shader(getDefaultVertShaderSource(), getDefaultFragShaderSource())
+: shader(getDefaultVertShaderSource(), getDefaultFragShaderSource(), nullptr)
 {
     frameBufSizeLoc = glGetUniformLocation(shader.getID(), "frameBufSize");
 }

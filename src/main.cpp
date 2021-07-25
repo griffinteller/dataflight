@@ -24,12 +24,13 @@ int main()
 
     Framebuffer mainContext (width, height, true);
 
-    Axes axes (Axes::DefaultColors, 200);
+    Axes axes (Axes::DefaultColors, 10);
 
     DataCamera camera(&window, nullptr, &axes, Transform(vec3(0, 0, 3)), 10);
     camera.setFramebuffer(&mainContext);
     camera.setDashLength(0.01);
     camera.setFarFrustum(1000);
+    camera.setAxisWidth(1);
 
     FramebufferPostprocessing postprocessing (mainContext);
     FXAAFilter fxaa;

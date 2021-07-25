@@ -38,6 +38,8 @@ private:
     int axesNegWorld2ViewLoc;
     int axesNegView2ClipLoc;
     int dashLengthLoc;
+    int axesPosLineWidthLoc;
+    int axesNegLineWidthLoc;
     float strafeSpeed = 20.0f;  // units per second
     float rotateSpeed = 100.0f;  // degrees per pixel
 

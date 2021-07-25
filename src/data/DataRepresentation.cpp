@@ -9,7 +9,7 @@
 DataRepresentation::DataRepresentation(std::vector<float> inData, std::vector<std::string> dimensionNames)
 : data (std::move(inData)), dimensionNames (std::move(dimensionNames)), dimensionIndices (),
   activeDimensionIndices {0, 1, 2}, VAO (0), vertexVBO (0),
-  shader (getDefaultVertShaderSource(), getDefaultFragShaderSource())
+  shader(getDefaultVertShaderSource(), getDefaultFragShaderSource(), nullptr)
 {
     dimensions = DataRepresentation::dimensionNames.size();
     points = data.size() / dimensions;

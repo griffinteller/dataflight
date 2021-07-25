@@ -13,10 +13,10 @@ class Shader
 private:
     uint ID;
 
-    static uint compileProgram(const char *vert, const char *frag);
+    static uint compileProgram(const char *vert, const char *frag, const char *geom = nullptr);
 
 public:
-    Shader(const char* vertexPath, const char* fragmentPath);
+    Shader(const char *vertexPath, const char *fragmentPath, const char *geometrySource = nullptr);
 
     void use() const;
 

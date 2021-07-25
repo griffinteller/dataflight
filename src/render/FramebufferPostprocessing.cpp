@@ -22,7 +22,7 @@ const char *FramebufferPostprocessing::getDefaultFragShaderSource()
 
 FramebufferPostprocessing::FramebufferPostprocessing(const Framebuffer &framebuffer)
 : incomingFramebuffer(framebuffer), VAO(0), VBO(0),
-  passthroughShader(getDefaultVertShaderSource(), getDefaultFragShaderSource()),
+  passthroughShader(getDefaultVertShaderSource(), getDefaultFragShaderSource(), nullptr),
   intermediateFramebuffer(framebuffer.getWidth(), framebuffer.getHeight(), false)
 {
     glGenVertexArrays(1, &VAO);

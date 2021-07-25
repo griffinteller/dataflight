@@ -11,7 +11,7 @@ uint Shader::getID() const
     return ID;
 }
 
-uint Shader::compileProgram(const char *vert, const char *frag)
+uint Shader::compileProgram(const char *vert, const char *frag, const char *geom)
 {
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -26,6 +26,23 @@ uint Shader::compileProgram(const char *vert, const char *frag)
         char info[512];
         glGetShaderInfoLog(vertexShader, 512, nullptr, info);
         std::cout << "VERTEX SHADER COMPILATION FAILURE:\n" << info << std::endl;
+    }
+
+    unsigned int geomShader;
+    if (geom != nullptr)
+    {
+        geomShader = glCreateShader(GL_GEOMETRY_SHADER);
+        glShaderSource(geomShader, 1, &geom, nullptr);
+        glCompileShader(geomShader);
+
+        glGetShaderiv(geomShader, GL_COMPILE_STATUS, &compileSuccess);
+
+        if (!compileSuccess)
+        {
+            char info[512];
+            glGetShaderInfoLog(geomShader, 512, nullptr, info);
+            std::cout << "GEOMETRY SHADER COMPILATION FAILURE:\n" << info << std::endl;
+        }
     }
 
     unsigned int fragmentShader;
@@ -43,6 +60,10 @@ uint Shader::compileProgram(const char *vert, const char *frag)
 
     unsigned int program = glCreateProgram();
     glAttachShader(program, vertexShader);
+
+    if (geom != nullptr)
+        glAttachShader(program, geomShader);
+
     glAttachShader(program, fragmentShader);
     glLinkProgram(program);
 
@@ -57,12 +78,15 @@ uint Shader::compileProgram(const char *vert, const char *frag)
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
+    if (geom != nullptr)
+        glDeleteShader(geomShader);
+
     return program;
 }
 
-Shader::Shader(const char *vertexSource, const char *fragmentSource)
+Shader::Shader(const char *vertexPath, const char *fragmentPath, const char *geometrySource)
 {
-    ID = compileProgram(vertexSource, fragmentSource);
+    ID = compileProgram(vertexPath, fragmentPath, geometrySource);
 }
 
 void Shader::use() const

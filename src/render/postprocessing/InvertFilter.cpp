@@ -20,7 +20,7 @@ const char *InvertFilter::getDefaultFragShaderSource()
 }
 
 InvertFilter::InvertFilter()
-: shader (getDefaultVertShaderSource(), getDefaultFragShaderSource())
+: shader(getDefaultVertShaderSource(), getDefaultFragShaderSource(), nullptr)
 {
 }
 
