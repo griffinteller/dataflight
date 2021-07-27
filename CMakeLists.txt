@@ -28,6 +28,6 @@ add_executable(DataVisualization lib/glad.c src/main.cpp src/window/Window.cpp
         src/ui/VisualizationSettingsWindow.cpp lib/include/ImGuiFileDialog/ImGuiFileDialog.cpp
         src/ui/DataLoadingWindow.cpp src/ui/UiWindow.cpp src/ui/DataSettingsWindow.cpp src/data/CSVLoader.cpp
         src/util/StringUtil.cpp src/data/Axes.cpp src/render/FramebufferPostprocessing.cpp src/render/Framebuffer.cpp
-        src/render/postprocessing/FXAAFilter.cpp src/render/postprocessing/InvertFilter.cpp)
+        src/render/postprocessing/FXAAFilter.cpp src/render/postprocessing/InvertFilter.cpp src/geometry/MeshGeneration.cpp src/geometry/MeshGeneration.h src/geometry/Mesh.cpp src/geometry/Mesh.h)
 
 target_link_libraries(DataVisualization libglfw3.a -lGL -lX11 -lpthread -lXrandr -lXi -ldl)

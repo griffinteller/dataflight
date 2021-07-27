@@ -24,7 +24,7 @@ int main()
 
     Framebuffer mainContext (width, height, true);
 
-    Axes axes (Axes::DefaultColors, 200);
+    Axes axes(Axes::DefaultColors, 200, 10, 1);
 
     DataCamera camera(&window, nullptr, &axes, Transform(vec3(0, 0, 3)), 10);
     camera.setFramebuffer(&mainContext);

@@ -8,14 +8,14 @@
 
 #include <typedefs.h>
 #include <render/Shader.h>
+#include <geometry/Mesh.h>
+#include <window/CallbackInterfaces.h>
 
-class Axes {
-
+class Axes
+{
 private:
-    uint positiveVAO;
-    uint negativeVAO;  // will be dashed, dotted, etc, so needs diff dataShader
-    uint positiveVBO;
-    uint negativeVBO;
+    Mesh posMeshes[3];
+    Mesh negMeshes[3];
     vec4 colors[4];
     Shader positiveShader;
     Shader negativeShader;
@@ -31,14 +31,9 @@ public:
     const static vec4 DefaultColors[3];
 
     // range is radius (ie (-range, range)) for all axes
-    explicit Axes(const vec4 colors[], float range = 50);
+    explicit Axes(const vec4 colors[], float range, int verticesPerAxisBase, float baseRadius);
 
-    uint getPositiveVAO() const;
-    uint getNegativeVAO() const;
-    const Shader &getPositiveShader() const;
-    const Shader &getNegativeShader() const;
-
-    ~Axes();
+    void draw(const mat4 &world2View, const mat4 &view2Clip) const;
 };
 
 
