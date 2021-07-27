@@ -1,6 +1,6 @@
 R""(
 
-#version 430 core
+#version 410 core
 
 in vec4 lineColor;
 in float lineCoord;
