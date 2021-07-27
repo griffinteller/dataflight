@@ -18,15 +18,7 @@ void Window::staticWindowSizeCallback(GLFWwindow* window, int width, int height)
     activeWindow->windowSizeCallback(width, height);
 }
 
-void GLAPIENTRY Window::messageCallback( GLenum source, GLenum type, GLuint id, GLenum severity,
-                                         GLsizei length, const GLchar* message, const void* userParam)
-{
-    fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-             ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-             type, severity, message );
-}
-
-Window::Window(int width, int height, vec4 clearColor, bool debug)
+Window::Window(int width, int height, vec4 clearColor)
 : clearColor(clearColor), mainContextDrawables(0), frameCallbacks(0), keyCallbacks(0), charCallbacks(0),
 cursorPosCallbacks(0), cursorEnterCallbacks(0), mouseButtonCallbacks(0), scrollCallbacks(0), fileDropCallbacks(0),
 windowSizeCallbacks(0)
@@ -68,14 +60,6 @@ windowSizeCallbacks(0)
     glfwSetMouseButtonCallback(window, staticMouseButtonCallback);
     glfwSetScrollCallback(window, staticScrollCallback);
     glfwSetDropCallback(window, staticFileDropCallback);
-
-
-    if (debug)
-    {
-        glEnable(GL_DEBUG_OUTPUT);
-        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-        glDebugMessageCallback(messageCallback, 0);
-    }
 
     handle = window;
 }

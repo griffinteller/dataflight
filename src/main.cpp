@@ -14,7 +14,7 @@ int main()
 {
     constexpr int width = 1920, height = 1080;
 
-    Window window (width, height, vec4(0.0, 0.0, 0.0, 1.0), false);
+    Window window(width, height, vec4(0.0, 0.0, 0.0, 1.0));
 
     /*CSVLoader csvLoader = CSVLoader("/home/griffinteller/DataVisualization/res/data/spain_climate_clean.csv");
     std::vector<std::string> columns {"HourlyDewPointTemperature", "HourlyDryBulbTemperature", "HourlyRelativeHumidity"};
