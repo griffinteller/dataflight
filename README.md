@@ -3,6 +3,9 @@
 Visualize and explore high-dimensional data by flying through it! Dataflight allows you to sgrasp patterns inyour dataset in a simple and intuitive way.
 
 
+![Example video](dataflight.mp4)
+
+
 
 ### Usage
 
