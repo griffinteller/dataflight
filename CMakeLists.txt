@@ -29,6 +29,7 @@ add_executable(DataVisualization lib/glad.c src/main.cpp src/window/Window.cpp
         src/render/postprocessing/FXAAFilter.cpp src/render/postprocessing/InvertFilter.cpp)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES Linux)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD)
     target_link_libraries(DataVisualization libglfw3.a -lGL -lX11 -lpthread -lXrandr -lXi -ldl)
 elseif (${CMAKE_SYSTEM_NAME} MATCHES Windows)
     target_link_libraries(DataVisualization libglfw3.a)
